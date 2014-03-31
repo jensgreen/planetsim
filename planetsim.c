@@ -128,7 +128,7 @@ void scaleSphere(Sphere *sphere, float s){
 
 
 int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
-float MOVE_SPEED = 0.3;
+float MOVE_SPEED = 3, MOUSE_SENS = 0.005;
 
 
 // vertex array object
@@ -139,6 +139,20 @@ GLuint texprogram, program;
 GLuint tex1, tex2;
 TextureData ttex; // terrain
 
+Model* fuckUpModel(Model *sphereModel2){
+	vec3 newPos;
+	for(int i = 0; i < sphereModel2->numVertices; i++){
+		newPos.x = sphereModel2->vertexArray[3*i]+sphereModel2->normalArray[3*i];
+		newPos.y = sphereModel2->vertexArray[3*i+1]+sphereModel2->normalArray[3*i+1];
+		newPos.z = sphereModel2->vertexArray[3*i+2]+sphereModel2->normalArray[3*i+2];
+		newPos = ScalarMult(newPos, i*0.001);
+		sphereModel2->vertexArray[3*i] = newPos.x;
+		sphereModel2->vertexArray[3*i+1] = newPos.y;
+		sphereModel2->vertexArray[3*i+2] = newPos.z;
+	}
+
+	return LoadDataToModel(sphereModel2->vertexArray, sphereModel2->normalArray, NULL, NULL, sphereModel2->indexArray, sphereModel2->numVertices, sphereModel2->numIndices);
+}
 
 void init(void)
 {
@@ -148,7 +162,7 @@ void init(void)
 	glDisable(GL_CULL_FACE);
 	printError("GL inits");
 
-	projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 50.0);
+	projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 5000.0);
 
 	// Load and compile shader
 	texprogram = loadShaders("terrain.vert", "terrain.frag");
@@ -170,6 +184,7 @@ void init(void)
 
 	// Load models
 	sphereModel = LoadModelPlus("HD_SPHERE_2015.obj");
+	sphereModel = fuckUpModel(sphereModel);
 	initSphere(&theSphere,10, 5, 0, 0.2);
 	// Load terrain data
 	printError("init terrain");
@@ -229,7 +244,7 @@ void timer(int i)
 void mouse(int x, int y)
 {
 
-	camMatrix = Mult(Mult(Rx((float)(y-old_y)*0.005),Ry((float)(-(x-old_x))*0.005)), camMatrix); 
+	camMatrix = Mult(Mult(Rx((float)(y-old_y)*MOUSE_SENS),Ry((float)(-(x-old_x))*MOUSE_SENS)), camMatrix); 
 	old_x = x;
 	old_y = y;
 }
