@@ -2,3 +2,4 @@ planetsim
 *.o
 *.out
 *.swp
+makefile
