@@ -145,7 +145,7 @@ Model* fuckUpModel(Model *sphereModel2){
 		newPos.x = sphereModel2->vertexArray[3*i]+sphereModel2->normalArray[3*i];
 		newPos.y = sphereModel2->vertexArray[3*i+1]+sphereModel2->normalArray[3*i+1];
 		newPos.z = sphereModel2->vertexArray[3*i+2]+sphereModel2->normalArray[3*i+2];
-		newPos = ScalarMult(newPos, i*0.001);
+		newPos = ScalarMult(newPos, 5);
 		sphereModel2->vertexArray[3*i] = newPos.x;
 		sphereModel2->vertexArray[3*i+1] = newPos.y;
 		sphereModel2->vertexArray[3*i+2] = newPos.z;
