@@ -15,6 +15,8 @@ void glutReshapeFunc(void (*func)(int width, int height));
 void glutDisplayFunc(void (*func)(void));
 void glutKeyboardFunc(void (*func)(unsigned char key, int x, int y));
 void glutKeyboardUpFunc(void (*func)(unsigned char key, int x, int y));
+void glutSpecialFunc(void (*func)(unsigned char key, int x, int y));
+void glutSpecialUpFunc(void (*func)(unsigned char key, int x, int y));
 
 void glutMouseFunc(void (*func)(int button, int state, int x, int y));
 void glutPassiveMotionFunc(void (*func)(int x, int y));
@@ -27,6 +29,8 @@ void glutCreateWindow (char *windowTitle);
 void glutSwapBuffers();
 
 #define GLUT_ELAPSED_TIME		(700)
+#define GLUT_WINDOW_WIDTH		102
+#define GLUT_WINDOW_HEIGHT		103
 int glutGet(int type);
 
 void glutInitDisplayMode(unsigned int mode);
@@ -56,7 +60,7 @@ void glutInitContextVersion(int major, int minor);
 
 // Only some modes supported
 #define GLUT_STENCIL			32
-//#define GLUT_MULTISAMPLE		128
+#define GLUT_MULTISAMPLE		128
 //#define GLUT_STEREO			256
 #define GLUT_RGB			0
 #define GLUT_RGBA			GLUT_RGB
@@ -64,6 +68,50 @@ void glutInitContextVersion(int major, int minor);
 #define GLUT_DOUBLE			2
 #define GLUT_DEPTH			16
 
+// Special keys.
+#define GLUT_KEY_F1			1
+#define GLUT_KEY_F2			2
+#define GLUT_KEY_F3			3
+#define GLUT_KEY_F4			4
+#define GLUT_KEY_F5			5
+#define GLUT_KEY_F6			6
+#define GLUT_KEY_F7			7
+// F8 and up ignored since they are not possible on some keyboards - like mine
+#define GLUT_KEY_LEFT			100
+#define GLUT_KEY_UP			101
+#define GLUT_KEY_RIGHT			102
+#define GLUT_KEY_DOWN			103
+#define GLUT_KEY_PAGE_UP		104
+#define GLUT_KEY_PAGE_DOWN		105
+#define GLUT_KEY_HOME			106
+#define GLUT_KEY_END			107
+#define GLUT_KEY_INSERT			108
+// Visibility
+#define GLUT_NOT_VISIBLE		0
+#define GLUT_VISIBLE			1
+
+
+// Menu support
+int glutCreateMenu(void (*func)(int value));
+void glutAddMenuEntry(char *name, int value);
+void glutAttachMenu(int button);
+void glutDetachMenu(int button);
+void glutAddSubMenu(char *name, int menu);
+void glutSetMenu(int menu);
+int glutGetMenu(void);
+void glutChangeToMenuEntry(int index, char *name, int value);
+
+// Visibility not-really-support
+void glutVisibilityFunc(void (*visibility)(int status));
+
+// Move mouse pointer, conforms with GLUT
+void glutWarpPointer(int x, int y);
+
+// New calls: Show/hide mouse pointer. Great for mouse controlled games.
+// (Untested and so far missing in Linux/Windows API)
+// Rename to GLUT-conforming glutSetCursor?
+void glutShowCursor();
+void glutHideCursor();
 
 #ifdef __cplusplus
 }
