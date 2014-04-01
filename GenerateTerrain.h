@@ -20,7 +20,7 @@
 	
 
 //	void CopyVector(vec3 *v, vec3 *dest); // Will probably be removed
-Model* GenerateTerrain(Model *sphereModel, int scaleSphere, int maxIteration, float addSubConst);
+Model* GenerateTerrain(Model *sphereModel,/* int scaleSphere, */int maxIteration, float addSubConst);
 
 Model* ChangeNormals(Model *sphereModel);
 //Model* splitResizeModel(Model *sphereModel, GLfloat addConst, GLfloat subConst);

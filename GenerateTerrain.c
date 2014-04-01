@@ -17,10 +17,11 @@ Model* ChangeNormals(Model *sphereModel) {
 
 
 //Method assume that the model i a sphere and the sphere center is origo. Should be fixed before push.
-Model* GenerateTerrain(Model *sphereModel, int scaleSphere, int maxIterations, float addSubConst){
+Model* GenerateTerrain(Model *sphereModel, /*int scaleSphere,*/ int maxIterations, float addSubConst){
 	vec3 newPos;
 	
 	//Scale up planet to a size we can handle
+	/*
         for(int i = 0; i < sphereModel->numVertices; i++){
                 newPos.x = sphereModel->vertexArray[3*i]+sphereModel->normalArray[3*i];
                	newPos.y = sphereModel->vertexArray[3*i+1]+sphereModel->normalArray[3*i+1];
@@ -30,7 +31,7 @@ Model* GenerateTerrain(Model *sphereModel, int scaleSphere, int maxIterations, f
                	sphereModel->vertexArray[3*i+1] = newPos.y;
                	sphereModel->vertexArray[3*i+2] = newPos.z;
         }
-   
+   */
 
 	vec3 planeNorm;
 	vec3 pointNormal;
