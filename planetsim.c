@@ -10,19 +10,22 @@
 #include "VectorUtils3.h"
 #include "loadobj.h"
 #include "LoadTGA.h"
+#include "GenerateTerrain.h"
 #include <math.h>
 
 mat4 projectionMatrix;
+
+/*
 float scaleXZ = 5.0, scaleY = 50.0;
 int mapWidth;
-/*
+
 vec3 calculateNormal(vec3 v1, vec3 v2, vec3 v3){
 	vec3 dir1 = v1-v2;
 	vec3 dir2 = v1-v3;
 	return CrossProduct(dir1, CrossProduct(dir1, dir2));
 }
-*/
-/*Model* GenerateTerrain(TextureData *tex)
+
+Model* GenerateTerrain(TextureData *tex)
 {
 	mapWidth = tex->width;
 	int vertexCount = tex->width * tex->height;
@@ -128,7 +131,7 @@ void scaleSphere(Sphere *sphere, float s){
 
 
 int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
-float MOVE_SPEED = 3, MOUSE_SENS = 0.005;
+float MOVE_SPEED = 3, MOUSE_SENS = 0.002;
 
 
 // vertex array object
@@ -139,20 +142,6 @@ GLuint texprogram, program;
 GLuint tex1, tex2;
 TextureData ttex; // terrain
 
-Model* fuckUpModel(Model *sphereModel2){
-	vec3 newPos;
-	for(int i = 0; i < sphereModel2->numVertices; i++){
-		newPos.x = sphereModel2->vertexArray[3*i]+sphereModel2->normalArray[3*i];
-		newPos.y = sphereModel2->vertexArray[3*i+1]+sphereModel2->normalArray[3*i+1];
-		newPos.z = sphereModel2->vertexArray[3*i+2]+sphereModel2->normalArray[3*i+2];
-		newPos = ScalarMult(newPos, 5);
-		sphereModel2->vertexArray[3*i] = newPos.x;
-		sphereModel2->vertexArray[3*i+1] = newPos.y;
-		sphereModel2->vertexArray[3*i+2] = newPos.z;
-	}
-
-	return LoadDataToModel(sphereModel2->vertexArray, sphereModel2->normalArray, NULL, NULL, sphereModel2->indexArray, sphereModel2->numVertices, sphereModel2->numIndices);
-}
 
 void init(void)
 {
@@ -183,8 +172,9 @@ void init(void)
 			0.0, 1.0, 0.0);
 
 	// Load models
-	sphereModel = LoadModelPlus("HD_SPHERE_2015.obj");
-	sphereModel = fuckUpModel(sphereModel);
+	printf("Loading models\n");
+	sphereModel = LoadModel("HD_SPHERE_2015.obj");
+	sphereModel = GenerateTerrain(sphereModel, 100, 100 , 50);
 	initSphere(&theSphere,10, 5, 0, 0.2);
 	// Load terrain data
 	printError("init terrain");
