@@ -10,19 +10,22 @@
 #include "VectorUtils3.h"
 #include "loadobj.h"
 #include "LoadTGA.h"
+#include "GenerateTerrain.h"
 #include <math.h>
 
 mat4 projectionMatrix;
+
+/*
 float scaleXZ = 5.0, scaleY = 50.0;
 int mapWidth;
-/*
+
 vec3 calculateNormal(vec3 v1, vec3 v2, vec3 v3){
 	vec3 dir1 = v1-v2;
 	vec3 dir2 = v1-v3;
 	return CrossProduct(dir1, CrossProduct(dir1, dir2));
 }
-*/
-/*Model* GenerateTerrain(TextureData *tex)
+
+Model* GenerateTerrain(TextureData *tex)
 {
 	mapWidth = tex->width;
 	int vertexCount = tex->width * tex->height;
@@ -128,7 +131,7 @@ void scaleSphere(Sphere *sphere, float s){
 
 
 int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
-float MOVE_SPEED = 0.3;
+float MOVE_SPEED = 3, MOUSE_SENS = 0.002;
 
 
 // vertex array object
@@ -148,7 +151,7 @@ void init(void)
 	glDisable(GL_CULL_FACE);
 	printError("GL inits");
 
-	projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 50.0);
+	projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 5000.0);
 
 	// Load and compile shader
 	texprogram = loadShaders("terrain.vert", "terrain.frag");
@@ -169,7 +172,9 @@ void init(void)
 			0.0, 1.0, 0.0);
 
 	// Load models
-	sphereModel = LoadModelPlus("HD_SPHERE_2015.obj");
+	printf("Loading models\n");
+	sphereModel = LoadModel("HD_SPHERE_2015.obj");
+	sphereModel = GenerateTerrain(sphereModel, 100, 100 , 50);
 	initSphere(&theSphere,10, 5, 0, 0.2);
 	// Load terrain data
 	printError("init terrain");
@@ -229,7 +234,7 @@ void timer(int i)
 void mouse(int x, int y)
 {
 
-	camMatrix = Mult(Mult(Rx((float)(y-old_y)*0.005),Ry((float)(-(x-old_x))*0.005)), camMatrix); 
+	camMatrix = Mult(Mult(Rx((float)(y-old_y)*MOUSE_SENS),Ry((float)(-(x-old_x))*MOUSE_SENS)), camMatrix); 
 	old_x = x;
 	old_y = y;
 }
