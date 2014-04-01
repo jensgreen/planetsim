@@ -131,7 +131,7 @@ void scaleSphere(Sphere *sphere, float s){
 
 
 int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
-float MOVE_SPEED = 3, MOUSE_SENS = 0.002;
+float MOVE_SPEED = 2, MOUSE_SENS = 0.002;
 
 
 // vertex array object
@@ -174,7 +174,7 @@ void init(void)
 	// Load models
 	printf("Loading models\n");
 	sphereModel = LoadModel("HD_SPHERE_2015.obj");
-	sphereModel = GenerateTerrain(sphereModel, 100, 100 , 50);
+	sphereModel = GenerateTerrain(sphereModel, 1000 , 0.1);
 	initSphere(&theSphere,10, 5, 0, 0.2);
 	// Load terrain data
 	printError("init terrain");
