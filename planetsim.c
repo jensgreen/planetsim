@@ -12,6 +12,7 @@
 #include "LoadTGA.h"
 #include "GenerateTerrain.h"
 #include <math.h>
+#include "controls.h"
 
 mat4 projectionMatrix;
 
@@ -131,12 +132,8 @@ void scaleSphere(Sphere *sphere, float s){
 
 
 int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
-float MOVE_SPEED = 2, MOUSE_SENS = 0.002;
 
 
-// vertex array object
-mat4 camMatrix;
-int old_x, old_y;
 // Reference to shader texprogram
 GLuint texprogram, program;
 GLuint tex1, tex2;
@@ -165,11 +162,6 @@ void init(void)
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	// init camMatrix 
-	vec3 cam = {0, 5, 8};
-	vec3 lookAtPoint = {2, 0, 2};
-	camMatrix = lookAt(cam.x, cam.y, cam.z,
-			lookAtPoint.x, lookAtPoint.y, lookAtPoint.z,
-			0.0, 1.0, 0.0);
 
 	// Load models
 	printf("Loading models\n");
@@ -181,17 +173,6 @@ void init(void)
 }
 
 
-void processInput(){
-	if (keyIsDown('d'))
-		camMatrix = Mult(T(-MOVE_SPEED,0,0), camMatrix);
-	if (keyIsDown('a'))
-		camMatrix = Mult(T(MOVE_SPEED, 0, 0), camMatrix);
-	if (keyIsDown('w'))
-		camMatrix = Mult(T(0,0,MOVE_SPEED), camMatrix);
-
-	if (keyIsDown('s'))
-		camMatrix = Mult(T(0,0,-MOVE_SPEED), camMatrix);
-}
 
 void drawSphere(Sphere *sphere, mat4 tot){
 	mat4 total = tot;
@@ -216,7 +197,7 @@ void display(void)
 	// Build matrix
 
 	modelView = IdentityMatrix();
-	total = Mult(camMatrix, modelView);
+	total = Mult(getCamera().matrix, modelView);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
 	drawSphere(&theSphere, total);
@@ -231,15 +212,6 @@ void timer(int i)
 	glutPostRedisplay();
 }
 
-void mouse(int x, int y)
-{
-
-	camMatrix = Mult(Mult(Rx((float)(y-old_y)*MOUSE_SENS),Ry((float)(-(x-old_x))*MOUSE_SENS)), camMatrix); 
-	old_x = x;
-	old_y = y;
-}
-
-
 
 int main(int argc, char **argv)
 {
@@ -249,7 +221,8 @@ int main(int argc, char **argv)
 	glutInitWindowSize (WINDOW_WIDTH, WINDOW_HEIGHT);
 	glutCreateWindow ("TSBK07 Lab 4");
 	glutDisplayFunc(display);
-	init ();
+	initCamera();
+  init ();
 	initKeymapManager();
 	glutTimerFunc(20, &timer, 0);
 
