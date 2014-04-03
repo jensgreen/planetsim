@@ -222,6 +222,7 @@ int main(int argc, char **argv)
 	glutCreateWindow ("TSBK07 Lab 4");
 	glutDisplayFunc(display);
 	initCamera();
+  initControls(WINDOW_WIDTH, WINDOW_HEIGHT);
   init ();
 	initKeymapManager();
 	glutTimerFunc(20, &timer, 0);
