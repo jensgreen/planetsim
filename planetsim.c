@@ -11,6 +11,7 @@
 #include "GenerateTerrain.h"
 #include <math.h>
 #include "controls.h"
+#include "Skybox.h"
 
 mat4 projectionMatrix;
 
@@ -80,6 +81,7 @@ void init(void)
 
 
 void drawSphere(Sphere *sphere, mat4 tot){
+	glUseProgram(program);
 	mat4 total = tot;
 	total = Mult(total, sphere->scaleAndPos);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
@@ -106,6 +108,7 @@ void display(void)
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
 	drawSphere(&theSphere, total);
+	drawSkybox(projectionMatrix, getCamera().matrix);
 	printError("display 2");
 
 	glutSwapBuffers();
@@ -124,8 +127,9 @@ int main(int argc, char **argv)
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitContextVersion(3, 2);
 	glutInitWindowSize (WINDOW_WIDTH, WINDOW_HEIGHT);
-	glutCreateWindow ("TSBK07 Lab 4");
+	glutCreateWindow ("PlanetSim");
 	glutDisplayFunc(display);
+	initSkybox();
 	initCamera();
   initControls(WINDOW_WIDTH, WINDOW_HEIGHT);
   init ();

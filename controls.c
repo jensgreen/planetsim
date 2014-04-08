@@ -1,3 +1,4 @@
+#include "controls.h"
 #ifdef __APPLE__
   #include <CoreGraphics/CoreGraphics.h>
   #include "glut.h"
