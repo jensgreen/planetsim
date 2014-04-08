@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+#ifdef __APPLE__
+  #include "glut.h"
+#endif
+
 // Same or similar to old GLUT calls
 void glutMainLoop();
 void glutCheckLoop();
@@ -39,6 +43,7 @@ void glutRepeatingTimerFunc(int millis); // Old name, will be removed
 void glutRepeatingTimer(int millis);
 // New call for polling the keyboard, good for games
 char glutKeyIsDown(unsigned char c);
+void glutWarpPointer( int x, int y );
 
 void glutReshapeWindow(int width, int height);
 void glutSetWindowTitle(char *title);

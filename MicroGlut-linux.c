@@ -16,6 +16,7 @@
 // 130916: Fixed the event bug. Cleaned up most comments left from debugging.
 // 130926: Cleaned up warnings, added missing #includes.
 // 140130: A bit more cleanup for avoiding warnings (_BSD_SOURCE below).
+// 140401: glutKeyIsDown and glutWarpPointer added and got an extra round of testing.
 
 #define _BSD_SOURCE
 #include <math.h>
@@ -51,10 +52,12 @@ int gMode; // NOT YET USED
 char animate = 1; // Use for glutNeedsRedisplay?
 struct timeval timeStart;
 static Atom wmDeleteMessage; // To handle delete msg
+char gKeymap[256];
 
 void glutInit(int *argc, char *argv[])
 {
 	gettimeofday(&timeStart, NULL);
+	memset(gKeymap, 0, sizeof(gKeymap));
 }
 void glutInitDisplayMode(unsigned int mode)
 {
@@ -282,10 +285,14 @@ void glutMainLoop()
       		case KeyRelease:
 		        r = XLookupString(&event.xkey, buffer, sizeof(buffer),
                               NULL, NULL);
+
       			if (event.type == KeyPress)
-	      		{	if (gKey) gKey(buffer[0], 0, 0);}
+	      		{	if (gKey) gKey(buffer[0], 0, 0); gKeymap[(int)buffer[0]] = 1;}
 	      		else
-	      		{	if (gKeyUp) gKeyUp(buffer[0], 0, 0);}
+	      		{	if (gKeyUp) gKeyUp(buffer[0], 0, 0); gKeymap[(int)buffer[0]] = 0;}
+//	      		{	if (gKey) gKey(buffer[0], 0, 0);}
+//	      		else
+//	      		{	if (gKeyUp) gKeyUp(buffer[0], 0, 0);}
       			break;
 			case ButtonPress:
 				gButtonPressed[event.xbutton.button] = 1;
@@ -450,3 +457,33 @@ void glutInitContextVersion(int major, int minor)
 	gContextVersionMajor = major;
 	gContextVersionMinor = minor;
 }
+
+// Based on FreeGlut glutWarpPointer
+/*
+ * Moves the mouse pointer to given window coordinates
+ */
+void glutWarpPointer( int x, int y )
+{
+    if (dpy == NULL)
+    {
+      fprintf(stderr, "glutWarpPointer failed: MicroGlut not initialized!\n");
+    	return;
+    }
+
+    XWarpPointer(
+        dpy, // fgDisplay.Display,
+        None,
+        win, // fgStructure.CurrentWindow->Window.Handle,
+        0, 0, 0, 0,
+        x, y
+    );
+    /* Make the warp visible immediately. */
+    XFlush( dpy );
+//    XFlush( fgDisplay.Display );
+}
+
+char glutKeyIsDown(unsigned char c)
+{
+	return gKeymap[(unsigned int)c];
+}
+

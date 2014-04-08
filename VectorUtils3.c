@@ -61,6 +61,7 @@
 // 130922: Fixed a vital bug in CrossMatrix.
 // 130924: Fixed a bug in mat3tomat4.
 // 131014: Added TransposeMat3 (although I doubt its importance)
+// 140213: Corrected mat3tomat4. (Were did the correction in 130924 go?)
 
 // You may use VectorUtils as you please. A reference to the origin is appreciated
 // but if you grab some snippets from it without reference... no problem.
@@ -812,13 +813,13 @@ mat4 mat3tomat4(mat3 m)
 	result.m[1] = m.m[1];
 	result.m[2] = m.m[2];
 	result.m[3] = 0;
-	result.m[4] = m.m[4];
-	result.m[5] = m.m[5];
-	result.m[6] = m.m[6];
+	result.m[4] = m.m[3];
+	result.m[5] = m.m[4];
+	result.m[6] = m.m[5];
 	result.m[7] = 0;
-	result.m[8] = m.m[7];
-	result.m[9] = m.m[8];
-	result.m[10] = m.m[9];
+	result.m[8] = m.m[6];
+	result.m[9] = m.m[7];
+	result.m[10] = m.m[8];
 	result.m[11] = 0;
 
 	result.m[12] = 0;
