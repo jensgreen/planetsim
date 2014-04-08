@@ -5,6 +5,10 @@
 extern "C" {
 #endif
 
+#ifdef __APPLE__
+  #include "glut.h"
+#endif
+
 // Same or similar to old GLUT calls
 void glutMainLoop();
 void glutCheckLoop();

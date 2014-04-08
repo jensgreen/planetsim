@@ -131,7 +131,7 @@ void scaleSphere(Sphere *sphere, float s){
 
 
 
-int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
+int WINDOW_HEIGHT = 500, WINDOW_WIDTH = 500;
 
 
 // Reference to shader texprogram
