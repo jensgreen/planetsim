@@ -107,8 +107,8 @@ void display(void)
 	total = Mult(getCamera().matrix, modelView);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
-	drawSphere(&theSphere, total);
 	drawSkybox(projectionMatrix, getCamera().matrix);
+	drawSphere(&theSphere, total);
 	printError("display 2");
 
 	glutSwapBuffers();

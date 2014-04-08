@@ -6,7 +6,7 @@ void initSkybox() {
   LoadTGATextureSimple("SkyBox512.tga", &skyboxTex);
 }
 
-void drawSkybox(mat4 projMatrix, mat4 mdlMatrix) {
+void drawSkybox(mat4 projMatrix, mat4 camMatrix) {
   GLuint shader = skyboxShader;
   glUseProgram(shader);
   glDisable(GL_DEPTH_TEST);
@@ -14,19 +14,18 @@ void drawSkybox(mat4 projMatrix, mat4 mdlMatrix) {
   glBindTexture(GL_TEXTURE_2D, skyboxTex);
   glUniform1i(glGetUniformLocation(skyboxShader, "texUnit"), 0); // texure unit 0
   
-  // reset translation
-  // mat4 skyboxMatrix = buildSkyboxMatrix(projMatrix, camMatrix);
-  glUniformMatrix4fv(glGetUniformLocation(shader, "projMatrix"), 1, GL_TRUE, projMatrix.m);
-  glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, mdlMatrix.m);
+  mat4 skyboxMatrix = buildSkyboxMatrix(projMatrix, camMatrix);
+  glUniformMatrix4fv(glGetUniformLocation(shader, "totalMatrix"), 1, GL_TRUE, skyboxMatrix.m);
   DrawModel(skyboxModel, shader, "inPosition", NULL, "inTexCoord");
 
   glEnable(GL_DEPTH_TEST);
 }
 
 mat4 buildSkyboxMatrix(mat4 projMatrix, mat4 camMatrix) {
-  mat4 skyboxMatrix = Mult(projMatrix, camMatrix);
-  skyboxMatrix.m[3] = 0;
-  skyboxMatrix.m[7] = 0;
-  skyboxMatrix.m[11] = 0;
-  return skyboxMatrix;
+  mat4 tmp = camMatrix;
+  // reset translation
+  tmp.m[3] = 0;
+  tmp.m[7] = 0;
+  tmp.m[11] = 0;
+  return Mult(projMatrix, tmp);
 }

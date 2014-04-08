@@ -9,5 +9,6 @@ Model *skyboxModel;
 
 void initSkybox();
 void drawSkybox();
+
 // Builds model-to-view skybox matrix
 mat4 buildSkyboxMatrix(mat4 projMatrix, mat4 camMatrix);
