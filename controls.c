@@ -3,7 +3,7 @@
   #include "glut.h"
 #endif
 
-float MOVE_SPEED = 2, MOUSE_SENS = 0.002;
+//float MOVE_SPEED = 2, MOUSE_SENS = 0.002;
 int old_x, old_y, width, height;
 
 void initControls(int windowWidth, int windowHeight){

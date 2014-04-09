@@ -34,7 +34,7 @@ void scaleSphere(Sphere *sphere, float s){
 
 
 
-int WINDOW_HEIGHT = 500, WINDOW_WIDTH = 500;
+int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
 
 
 // Reference to shader texprogram
@@ -51,7 +51,7 @@ void init(void)
 	glDisable(GL_CULL_FACE);
 	printError("GL inits");
 
-	projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 5000.0);
+	projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 100000.0);
 
 	// Load and compile shader
 	texprogram = loadShaders("terrain.vert", "terrain.frag");
@@ -69,10 +69,10 @@ void init(void)
 
 	// Load models
 	printf("Loading models\n");
-	sphereModel = LoadModel("HD_SPHERE_2015.obj");
-	sphereModel = GenerateTerrain(sphereModel, 1000 , 0.5);
+	sphereModel = LoadModel("VERY_HD_SPHERE_2015.obj");
+	sphereModel = GenerateTerrain(sphereModel, 1 , 100);
 	initSphere(&theSphere,100, 100, 100, 0.2);
-	scaleSphere(&theSphere,100);
+	scaleSphere(&theSphere,1000);
 	// Load terrain data
 	printError("init terrain");
 }

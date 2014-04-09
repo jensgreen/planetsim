@@ -11,6 +11,6 @@ void main(void)
 	diffuse = dot(normalize(exNormal), light);
 	diffuse = max(0.0, diffuse); // No negative light	
 	float shade = ambient+1.0*diffuse;	
-	outColor =vec4(shade, shade/2,0, 1.0);
+	outColor =vec4(shade, shade/6,shade/2, 1.0);
 }
 
