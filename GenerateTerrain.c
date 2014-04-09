@@ -15,7 +15,7 @@ Model* ChangeNormals(Model *sphereModel) {
         vec3 curVer1, curVer2, curVer3, out;
 	GLfloat normals[sphereModel->numVertices*3];	
 	for(int i=0; i<sphereModel->numIndices/3;i++){
-        //printf("%d\n",i);
+        printf("%d\n",i);
         /*printf("%d:%f, %f, %f\n",sphereModel->indexArray[i*3], sphereModel->vertexArray[sphereModel->indexArray[i*3]+0], sphereModel->vertexArray[sphereModel->indexArray[i*3]+1], sphereModel->vertexArray[sphereModel->indexArray[i*3]+0]);
  *        
  *                        printf("%d:%f, %f, %f\n",sphereModel->indexArray[i*3+1], sphereModel->vertexArray[sphereModel->indexArray[i*3+1]+0], sphereModel->vertexArray[sphereModel->indexArray[i*3+1]+1], sphereModel->vertexArray[sphereModel->indexArray[i*3+1]+0]);
@@ -30,10 +30,17 @@ Model* ChangeNormals(Model *sphereModel) {
         curVer3.y = sphereModel->vertexArray[sphereModel->indexArray[i*3+2]*3+1];
         curVer3.z = sphereModel->vertexArray[sphereModel->indexArray[i*3+2]*3+2];
         //out = CalcNormalVector(curVer1,curVer2,curVer3);
-	out = CrossProduct(VectorSub(curVer2, curVer3), VectorSub(curVer1, curVer3));
-	if(sqrt(out.x*out.x + out.y*out.y + out.z*out.z) > 1.0)
-		printf("Out values = %f, %f, %f\n", out.x, out.y, out.z);
+/*	if(DotProduct(VectorSub(curVer2, curVer1),VectorSub(curVer3,curVer1))<0){
+		printf("INWARD VECTOR\n");
+	}
+*/
+	//printf("dot=%f\n",DotProduct(VectorSub(curVer2, curVer3),VectorSub(curVer1,curVer3)));	
 
+	out = CrossProduct(VectorSub(curVer2, curVer1), VectorSub(curVer3, curVer1));
+	
+	if(DotProduct(out,curVer1)<=0) {
+		printf("Inward vector\n");
+	}
 	/*printf("Indexes %d, %d, %d\n", sphereModel->indexArray[i*3],sphereModel->indexArray[i*3+1],sphereModel->indexArray[i*3+2]);
 	  printf("Normal: %f, %f, %f\n", curVer1.x, curVer1.y, curVer1.z);
 	  printf("Normal: %f, %f, %f\n", curVer2.x, curVer2.y, curVer2.z);
@@ -41,15 +48,15 @@ Model* ChangeNormals(Model *sphereModel) {
 	  */
 
 
-	normals[sphereModel->indexArray[i*3]*3+0] += out.x;
-	normals[sphereModel->indexArray[i*3]*3+1] += out.y;
-	normals[sphereModel->indexArray[i*3]*3+2] += out.z;
-	normals[sphereModel->indexArray[i*3+1]*3+0] += out.x;
-	normals[sphereModel->indexArray[i*3+1]*3+1] += out.y;
-	normals[sphereModel->indexArray[i*3+1]*3+2] += out.z;
-	normals[sphereModel->indexArray[i*3+2]*3+0] += out.x;
-	normals[sphereModel->indexArray[i*3+2]*3+1] += out.y;
-	normals[sphereModel->indexArray[i*3+2]*3+2] += out.z;
+	sphereModel->normalArray[sphereModel->indexArray[i*3]*3+0] += out.x;
+	sphereModel->normalArray[sphereModel->indexArray[i*3]*3+1] += out.y;
+	sphereModel->normalArray[sphereModel->indexArray[i*3]*3+2] += out.z;
+	sphereModel->normalArray[sphereModel->indexArray[i*3+1]*3+0] += out.x;
+	sphereModel->normalArray[sphereModel->indexArray[i*3+1]*3+1] += out.y;
+	sphereModel->normalArray[sphereModel->indexArray[i*3+1]*3+2] += out.z;
+	sphereModel->normalArray[sphereModel->indexArray[i*3+2]*3+0] += out.x;
+	sphereModel->normalArray[sphereModel->indexArray[i*3+2]*3+1] += out.y;
+	sphereModel->normalArray[sphereModel->indexArray[i*3+2]*3+2] += out.z;
 	/*	
 		sphereModel->normalArray[3*i] = out.x;
 		sphereModel->normalArray[3*i+1] = out.y;
@@ -64,7 +71,7 @@ Model* ChangeNormals(Model *sphereModel) {
 	  normals[i*3+1] /= norm;
 	  normals[i*3+2] /= norm;
 	  }*/
-	sphereModel->normalArray = normals;	
+//	sphereModel->normalArray = normals;	
 	return sphereModel;
 }
 

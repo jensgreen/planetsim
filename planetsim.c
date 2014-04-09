@@ -70,7 +70,7 @@ void init(void)
 	// Load models
 	printf("Loading models\n");
 	sphereModel = LoadModel("HD_SPHERE_2015.obj");
-	sphereModel = GenerateTerrain(sphereModel, 1 , 0.0);
+	sphereModel = GenerateTerrain(sphereModel, 1000 , 0.5);
 	initSphere(&theSphere,100, 100, 100, 0.2);
 	scaleSphere(&theSphere,100);
 	// Load terrain data
