@@ -64,13 +64,15 @@ void init(void)
 
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
-	// init camMatrix 
+
+
 
 	// Load models
 	printf("Loading models\n");
 	sphereModel = LoadModel("HD_SPHERE_2015.obj");
-	sphereModel = GenerateTerrain(sphereModel, 1000 , 0.1);
-	initSphere(&theSphere,10, 5, 0, 0.2);
+	sphereModel = GenerateTerrain(sphereModel, 1 , 0.0);
+	initSphere(&theSphere,100, 100, 100, 0.2);
+	scaleSphere(&theSphere,100);
 	// Load terrain data
 	printError("init terrain");
 }
