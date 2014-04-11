@@ -46,7 +46,7 @@ TextureData ttex; // terrain
 void init(void)
 {
 	// GL inits
-	glClearColor(0.2,0.2,0.5,0);
+	glClearColor(0,0,0,0);
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	printError("GL inits");
@@ -70,7 +70,7 @@ void init(void)
 	// Load models
 	printf("Loading models\n");
 	sphereModel = LoadModel("VERY_HD_SPHERE_2015.obj");
-	sphereModel = GenerateTerrain(sphereModel, 1 , 100);
+	sphereModel = GenerateTerrain(sphereModel, 1000 , 0.7);
 	initSphere(&theSphere,100, 100, 100, 0.2);
 	scaleSphere(&theSphere,1000);
 	// Load terrain data
