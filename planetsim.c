@@ -9,6 +9,7 @@
 #include "GenerateTerrain.h"
 #include <math.h>
 #include "controls.h"
+#include "LightSource.h"
 
 mat4 projectionMatrix;
 
@@ -74,6 +75,8 @@ void init(void)
 	initSphere(&theSphere,100, 100, 100, 0.2);
 	scaleSphere(&theSphere,1000);
 	// Load terrain data
+  initLightSource();
+  //init light
 	printError("init terrain");
 }
 
