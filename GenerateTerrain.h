@@ -19,8 +19,16 @@
 #include "loadobj.h"
 	
 
+typedef  struct{
+	float terrainMaxRadius;
+	vec3 velocity;
+	mat4 scaleAndPos;
+	Model *sphereModel
+} Sphere;
+
+
 //	void CopyVector(vec3 *v, vec3 *dest); // Will probably be removed
-Model* GenerateTerrain(Model *sphereModel,/* int scaleSphere, */int maxIteration, float addSubConst);
+Model* GenerateTerrain(Sphere *sphereModel,/* int scaleSphere, */int maxIteration, float addSubConst);
 
 void ChangeNormals(Model *sphereModel);
 //Model* splitResizeModel(Model *sphereModel, GLfloat addConst, GLfloat subConst);
