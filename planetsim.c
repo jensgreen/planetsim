@@ -16,10 +16,10 @@ typedef  struct{
 	float radius;
 	vec3 velocity;
 	mat4 scaleAndPos;
+	Model *sphereModel
 } Sphere;
 
 Sphere theSphere;
-Model *sphereModel;
 
 void initSphere(Sphere *sphere,float x,float z, float dx, float dz){
 	sphere->scaleAndPos = IdentityMatrix();
@@ -69,8 +69,8 @@ void init(void)
 
 	// Load models
 	printf("Loading models\n");
-	sphereModel = LoadModel("VERY_HD_SPHERE_2015.obj");
-	sphereModel = GenerateTerrain(sphereModel, 1000 , 0.7);
+	theSphere.sphereModel = LoadModel("VERY_HD_SPHERE_2015.obj");
+	theSphere.sphereModel = GenerateTerrain(theSphere.sphereModel, 1000 , 0.7);
 	initSphere(&theSphere,100, 100, 100, 0.2);
 	scaleSphere(&theSphere,1000);
 	// Load terrain data
@@ -83,7 +83,7 @@ void drawSphere(Sphere *sphere, mat4 tot){
 	mat4 total = tot;
 	total = Mult(total, sphere->scaleAndPos);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
-	DrawModel(sphereModel, program, "inPosition", "inNormal", NULL);	
+	DrawModel(theSphere.sphereModel, program, "inPosition", "inNormal", NULL);	
 }
 
 void display(void)
