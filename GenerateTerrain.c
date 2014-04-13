@@ -10,7 +10,7 @@
         #include <GL/gl.h>  
 #endif 
 
-Model* ChangeNormals(Model *sphereModel) {
+void ChangeNormals(Model *sphereModel) {
         printf("Size indexarray: %d, Size vertexArray: %d\n",sphereModel->numIndices, sphereModel->numVertices);
 	vec3 curVer1, curVer2, curVer3, out;
 
@@ -46,8 +46,6 @@ Model* ChangeNormals(Model *sphereModel) {
 		sphereModel->normalArray[sphereModel->indexArray[i*3+2]*3+1] += out.y;
 		sphereModel->normalArray[sphereModel->indexArray[i*3+2]*3+2] += out.z;
 	}	
-
-	return sphereModel;
 }
 
 
@@ -81,7 +79,7 @@ Model* GenerateTerrain(Model *sphereModel, /*int scaleSphere,*/ int maxIteration
 		}
 	}
 
-	sphereModel = ChangeNormals(sphereModel);
+	/*sphereModel = */ChangeNormals(sphereModel);
 
 	return LoadDataToModel(sphereModel->vertexArray, sphereModel->normalArray, NULL, NULL, sphereModel->indexArray, sphereModel->numVertices, sphereModel->numIndices);
 }
