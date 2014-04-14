@@ -57,6 +57,7 @@ Model* LoadDataToModel(
 			GLfloat *normals,
 			GLfloat *texCoords,
 			GLfloat *colors,
+
 			GLuint *indices,
 			int numVert,
 			int numInd,

@@ -3,7 +3,7 @@ Camera camera;
 
 void initCamera(){
 
-  camera.moveSpeed = 0.7;
+  camera.moveSpeed = 50;
   camera.mouseSens = 0.0005;
   
   camera.matrix = lookAt(10, 0, 10,
