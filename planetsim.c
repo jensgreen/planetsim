@@ -83,7 +83,9 @@ void init(void)
 
 
 void uploadLightToShader(){
+	getLightSource()[0].position.y -= 0.1;
 	glUniform3fv(glGetUniformLocation(program, "lightSourcesPos"), NR_OF_LIGHTSOURCES, &getLightSource()[0].position.x);
+	glUniform3fv(glGetUniformLocation(program, "lightSourcesColor"), NR_OF_LIGHTSOURCES, &getLightSource()[0].color.x);
 }
 
 void drawSphere(Sphere *sphere, mat4 tot){
