@@ -1,22 +1,22 @@
 #include "LightSource.h"
 
-LightSource theSource;
+LightSource lightSources[NR_OF_LIGHTSOURCES];
 
 void initLightSource(){
-  vec3 color, position;
+		Point3D color = {1.0f, 0.0f, 0.0f};
+		Point3D position = {10.0f, 5.0f, 0.0f};
 
-  position.x = 10;
-  position.y = 0;
-  position.z = 10;
-  theSource.position = position;
-  theSource.intensity = 100;
-  color.x = 1;
-  color.y = 0;
-  color.z = 0;
-  theSource.color = color;
+		lightSources[0].position= position;
+		lightSources[0].intensity = 100;
+		color.x = 1;
+		color.y = 0;
+		color.z = 0;
+		lightSources[0].color = color;
 }
 
 
-LightSource getLightSource(){
-  return theSource;
+LightSource* getLightSource(){
+		return lightSources;
 }
+
+

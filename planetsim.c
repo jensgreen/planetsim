@@ -13,6 +13,7 @@
 
 mat4 projectionMatrix;
 
+
 typedef  struct{
 	float radius;
 	vec3 velocity;
@@ -56,7 +57,7 @@ void init(void)
 
 	// Load and compile shader
 	texprogram = loadShaders("terrain.vert", "terrain.frag");
-	program = loadShaders("diffuse.vert", "diffuse.frag");
+	program = loadShaders("untexturedlight.vert", "untexturedlight.frag");
 	glUseProgram(texprogram);
 	printError("init shader");
 
@@ -75,12 +76,15 @@ void init(void)
 	initSphere(&theSphere,100, 100, 100, 0.2);
 	scaleSphere(&theSphere,1000);
 	// Load terrain data
-  initLightSource();
-  //init light
+	initLightSource();
+	//init light
 	printError("init terrain");
 }
 
 
+void uploadLightToShader(){
+	glUniform3fv(glGetUniformLocation(program, "lightSourcesPos"), NR_OF_LIGHTSOURCES, &getLightSource()[0].position.x);
+}
 
 void drawSphere(Sphere *sphere, mat4 tot){
 	mat4 total = tot;
@@ -101,6 +105,7 @@ void display(void)
 	printError("pre display");
 
 	glUseProgram(program);
+	uploadLightToShader();
 
 	// Build matrix
 
@@ -130,8 +135,8 @@ int main(int argc, char **argv)
 	glutCreateWindow ("TSBK07 Lab 4");
 	glutDisplayFunc(display);
 	initCamera();
-  initControls(WINDOW_WIDTH, WINDOW_HEIGHT);
-  init ();
+	initControls(WINDOW_WIDTH, WINDOW_HEIGHT);
+	init ();
 	initKeymapManager();
 	glutTimerFunc(20, &timer, 0);
 

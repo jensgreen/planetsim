@@ -1,12 +1,11 @@
 #include "VectorUtils3.h"
+#define NR_OF_LIGHTSOURCES 1
 
 typedef struct{
-  vec3 position;
+  Point3D position;
   GLfloat intensity;
-  vec3 color;
+  Point3D color;
 } LightSource;
 
-
-
 void initLightSource();
-LightSource getLightSource();
+LightSource* getLightSource();
