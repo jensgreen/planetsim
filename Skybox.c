@@ -2,8 +2,8 @@
 
 void initSkybox() {
   skyboxShader = loadShaders("skybox.vert", "skybox.frag");
-  skyboxModel = LoadModelPlus("skybox.obj");
-  LoadTGATextureSimple("SkyBox512.tga", &skyboxTex);
+  skyboxModel = LoadModelPlus("models/skybox.obj");
+  LoadTGATextureSimple("starbox.tga", &skyboxTex);
 }
 
 void drawSkybox(mat4 projMatrix, mat4 camMatrix) {
@@ -12,6 +12,7 @@ void drawSkybox(mat4 projMatrix, mat4 camMatrix) {
   glDisable(GL_DEPTH_TEST);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, skyboxTex);
+  glTexParameterf(GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_LINEAR);
   glUniform1i(glGetUniformLocation(skyboxShader, "texUnit"), 0); // texure unit 0
   
   mat4 skyboxMatrix = buildSkyboxMatrix(projMatrix, camMatrix);
