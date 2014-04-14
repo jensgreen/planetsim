@@ -17,13 +17,16 @@
 mat4 projectionMatrix;
 
 
-Sphere theSphere;
+//Sphere planets[0];
+//Sphere planets[1];
+Sphere planets[2];
 
-void initSphere(Sphere *sphere,float x,float z, float dx, float dz){
-	sphere->scaleAndPos = IdentityMatrix();
+void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, float terCons, char *s){
+	sphere->scaleAndPos = Mult(T(x,y,z),IdentityMatrix());
+	
 	sphere->terrainMaxRadius = 1.0;
-	sphere->velocity.x = dx; 
-	sphere->velocity.z = dz; 
+	sphere->sphereModel=LoadModelPlus(s);
+	sphere->sphereModel = GenerateTerrain(sphere,terIter,terCons);
 }
 
 void scaleSphere(Sphere *sphere, float s){
@@ -67,10 +70,13 @@ void init(void)
 
 	// Load models
 	printf("Loading models\n");
-	theSphere.sphereModel = LoadModel("VERY_HD_SPHERE_2015.obj");
-	theSphere.sphereModel = GenerateTerrain(&theSphere, 1000 , 0.7);
-	initSphere(&theSphere,100, 100, 100, 0.2);
-	scaleSphere(&theSphere,1000);
+	initSphere(&planets[0],1000, 1000 ,1000,1, 1,"SIMPLE_SPHERE_2015.obj");
+	scaleSphere(&planets[0],1000);
+
+
+	initSphere(&planets[1],-1000, 0, -1000,1,1,"HD_SPHERE_2015.obj");
+	scaleSphere(&planets[1],1000);
+
 	// Load terrain data
 	printError("init terrain");
 }
@@ -81,7 +87,7 @@ void drawSphere(Sphere *sphere, mat4 tot){
 	mat4 total = tot;
 	total = Mult(total, sphere->scaleAndPos);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
-	DrawModel(theSphere.sphereModel, program, "inPosition", "inNormal", NULL);	
+	DrawModel(sphere->sphereModel, program, "inPosition", "inNormal", NULL);	
 }
 
 void display(void)
@@ -103,7 +109,8 @@ void display(void)
 	total = Mult(getCamera().matrix, modelView);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
-	drawSphere(&theSphere, total);
+	drawSphere(&planets[0], total);
+	drawSphere(&planets[1], total);
 	printError("display 2");
 
 	glutSwapBuffers();
