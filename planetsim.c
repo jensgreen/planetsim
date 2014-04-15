@@ -81,9 +81,13 @@ void init(void)
 	printError("init terrain");
 }
 
+float t;
 
 void uploadLightToShader(){
-	getLightSource()[0].position.y -= 0.1;
+  t += 0.01;
+	getLightSource()[0].position.z += 5*cos(t);
+	getLightSource()[0].position.y += 5*sin(t);
+	//getLightSource()[1].position.x += 5*cos(t);
 	glUniform3fv(glGetUniformLocation(program, "lightSourcesPos"), NR_OF_LIGHTSOURCES, &getLightSource()[0].position.x);
 	glUniform3fv(glGetUniformLocation(program, "lightSourcesColor"), NR_OF_LIGHTSOURCES, &getLightSource()[0].color.x);
 }

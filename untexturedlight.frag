@@ -1,7 +1,7 @@
 #version 150
 out vec4 outColor;
 
-const int NR_OF_LIGHTSOURCES = 2;
+const int NR_OF_LIGHTSOURCES = 1;
 
 in vec3 exNormal;
 in vec3 exPosition;
@@ -21,16 +21,15 @@ void main(void)
 	color.z = 0;
 
 
-	for(int i = 0; i < 2;i++){
+	for(int i = 0; i < NR_OF_LIGHTSOURCES;i++){
 		lightColor = lightSourcesColor[i];	
 		// calc the vector light to vertice
 		lightDir = lightSourcesPos[i] - exPosition;
 
 		// Diffuse
-		diffuse = dot(normalize(exNormal), lightDir);
+		diffuse = dot(normalize(exNormal), normalize(lightDir));
 		diffuse = max(0.0, diffuse); // No negative light	
-		if(diffuse <= 10)
-			color += ambient+0.3*diffuse*lightSourcesColor[i];	
+		color = ambient+0.5*diffuse*lightSourcesColor[i];	
 	}
 	outColor = vec4(color, 1.0);
 
