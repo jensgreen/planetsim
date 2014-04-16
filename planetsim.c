@@ -87,9 +87,20 @@ void uploadLightToShader(){
   t += 0.01;
 	getLightSource()[0].position.z += 5*cos(t);
 	getLightSource()[0].position.y += 5*sin(t);
-	//getLightSource()[1].position.x += 5*cos(t);
-	glUniform3fv(glGetUniformLocation(program, "lightSourcesPos"), NR_OF_LIGHTSOURCES, &getLightSource()[0].position.x);
-	glUniform3fv(glGetUniformLocation(program, "lightSourcesColor"), NR_OF_LIGHTSOURCES, &getLightSource()[0].color.x);
+
+
+	getLightSource()[1].position.x += 7*cos(t);
+	getLightSource()[1].position.y += 7*sin(t);
+
+  vec3 colors[NR_OF_LIGHTSOURCES], positions[NR_OF_LIGHTSOURCES];
+	
+  for(int i = 0; i < NR_OF_LIGHTSOURCES; i++){
+    colors[i] = getLightSource()[i].color;
+    positions[i] = getLightSource()[i].position;
+  }
+
+  glUniform3fv(glGetUniformLocation(program, "lightSourcesPos"), NR_OF_LIGHTSOURCES, &positions[0].x);
+	glUniform3fv(glGetUniformLocation(program, "lightSourcesColor"), NR_OF_LIGHTSOURCES, &colors[0].x);
 }
 
 void drawSphere(Sphere *sphere, mat4 tot){
