@@ -10,17 +10,26 @@
         #include <GL/gl.h>  
 #endif 
 
-void ChangeNormals(Model *sphereModel) {
+void ChangeNormals(Sphere *sphere) {
+	Model *sphereModel = sphere->sphereModel;
         printf("Size indexarray: %d, Size vertexArray: %d\n",sphereModel->numIndices, sphereModel->numVertices);
 	vec3 curVer1, curVer2, curVer3, out;
+	
 
+	float maxRadius = 0;
+	float curRadius = 0;
 //Empty normalArray
 	for(int i=0; i<sphereModel->numVertices;i++){
 		sphereModel->normalArray[i*3]=0.0;
 		sphereModel->normalArray[i*3+1]=0.0;
 		sphereModel->normalArray[i*3+1]=0.0;
+		curRadius =sqrt(sphereModel->vertexArray[i*3]*sphereModel->vertexArray[i*3]+sphereModel->vertexArray[i*3+1]*sphereModel->vertexArray[i*3+1]+sphereModel->vertexArray[i*3+2]*sphereModel->vertexArray[i*3+2]); 
+		if(curRadius>maxRadius){
+			maxRadius=curRadius;
+		}
 	}
-
+	
+	sphere->terrainMaxRadius = maxRadius;
 
 //Calculating normalVectors for every triangle and setting adding that normal to all three vertex normals
 	for(int i=0; i<sphereModel->numIndices/3;i++){
@@ -79,7 +88,7 @@ Model* GenerateTerrain(Sphere *sphere, /*int scaleSphere,*/ int maxIterations, f
 		}
 	}
 
-	/*sphereModel = */ChangeNormals(sphere->sphereModel);
+	/*sphereModel = */ChangeNormals(sphere);
 
 	return LoadDataToModel(sphere->sphereModel->vertexArray, sphere->sphereModel->normalArray, NULL, NULL, sphere->sphereModel->indexArray, sphere->sphereModel->numVertices, sphere->sphereModel->numIndices);
 }

@@ -30,7 +30,7 @@ typedef  struct{
 //	void CopyVector(vec3 *v, vec3 *dest); // Will probably be removed
 Model* GenerateTerrain(Sphere *sphereModel,/* int scaleSphere, */int maxIteration, float addSubConst);
 
-void ChangeNormals(Model *sphereModel);
+void ChangeNormals(Sphere *sphere);
 //Model* splitResizeModel(Model *sphereModel, GLfloat addConst, GLfloat subConst);
 //Endif for ifndef __GENERATETERRAIN__
 #endif

@@ -30,10 +30,12 @@ void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, floa
 	sphere->terrainMaxRadius = 1.0;
 	sphere->sphereModel=LoadModelPlus(s);
 	sphere->sphereModel = GenerateTerrain(sphere,terIter,terCons);
+	printf("Sphere maxradius: %f\n", sphere->terrainMaxRadius);
 }
 
 void scaleSphere(Sphere *sphere, float s){
 	sphere->scaleAndPos = Mult(sphere->scaleAndPos, S(s,s,s));
+	sphere->terrainMaxRadius*=s;
 }
 
 
@@ -73,12 +75,13 @@ void init(void)
 
 	// Load models
 	printf("Loading models\n");
-	initSphere(&planets[0],1000, 1000 ,1000,1, 1,"SIMPLE_SPHERE_2015.obj");
-	scaleSphere(&planets[0],1000);
+	initSphere(&planets[0],10000, 10000 ,10000,10000, 0.1,"HD_SPHERE_2015.obj");
+
+	scaleSphere(&planets[0],10000);
 
 
-	initSphere(&planets[1],-1000, 0, -1000,1,1,"HD_SPHERE_2015.obj");
-	scaleSphere(&planets[1],1000);
+	initSphere(&planets[1],-10000, 0, -10000,10000,0.1,"HD_SPHERE_2015.obj");
+	scaleSphere(&planets[1],10000);
 
 	// Load terrain data
 	printError("init terrain");
