@@ -5,6 +5,8 @@
 #ifdef __APPLE__
 	#include <OpenGL/gl3.h>
 	#include "MicroGlut.h"
+	// Linking hint for Lightweight IDE
+	// uses framework Cocoa
 #endif
 #include "GL_utilities.h"
 #include "VectorUtils3.h"
@@ -13,6 +15,7 @@
 #include "GenerateTerrain.h"
 #include <math.h>
 #include "controls.h"
+#include "Skybox.h"
 
 mat4 projectionMatrix;
 
@@ -84,6 +87,7 @@ void init(void)
 
 
 void drawSphere(Sphere *sphere, mat4 tot){
+	glUseProgram(program);
 	mat4 total = tot;
 	total = Mult(total, sphere->scaleAndPos);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
@@ -109,6 +113,7 @@ void display(void)
 	total = Mult(getCamera().matrix, modelView);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
+	drawSkybox(projectionMatrix, getCamera().matrix);
 	drawSphere(&planets[0], total);
 	drawSphere(&planets[1], total);
 	printError("display 2");
@@ -129,8 +134,9 @@ int main(int argc, char **argv)
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitContextVersion(3, 2);
 	glutInitWindowSize (WINDOW_WIDTH, WINDOW_HEIGHT);
-	glutCreateWindow ("TSBK07 Lab 4");
+	glutCreateWindow ("PlanetSim");
 	glutDisplayFunc(display);
+	initSkybox();
 	initCamera();
   initControls(WINDOW_WIDTH, WINDOW_HEIGHT);
   init ();
