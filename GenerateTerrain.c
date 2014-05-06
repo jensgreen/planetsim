@@ -3,6 +3,7 @@
 #include "GenerateTerrain.h"
 #include <math.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #ifdef __APPLE__                
         #include <OpenGL/gl3.h>  
