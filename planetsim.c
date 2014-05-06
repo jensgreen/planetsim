@@ -64,8 +64,8 @@ void init(void)
   printf("Loading models\n");
   initSphere(&planets[0],0, 0 ,-5000,0, 0,"HD_SPHERE_2015.obj");
   scaleSphere(&planets[0],1000);
-  initHalo(&haloes[0], 0,0,-5000, "HD_SPHERE_2015.obj");
-  scaleHalo(&haloes[0],1000);
+  initHalo(&haloes[0], 0,0,-5000, "models/billboard.obj");
+  scaleHalo(&haloes[0],10000);
 
   initSphere(&planets[1],0, 0, 10000,0,0,"HD_SPHERE_2015.obj");
   scaleSphere(&planets[1],1000);
