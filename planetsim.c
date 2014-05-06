@@ -84,13 +84,13 @@ void init(void)
 float t;
 
 void uploadLightToShader(){
-  t += 0.01;
-	getLightSource()[0].position.z += 5*cos(t);
-	getLightSource()[0].position.y += 5*sin(t);
+  t += 0.03;
+	getLightSource()[0].position.z = 10*cos(t);
+	getLightSource()[0].position.y = 10*sin(t);
 
 
-	getLightSource()[1].position.x += 7*cos(t);
-	getLightSource()[1].position.y += 7*sin(t);
+	getLightSource()[1].position.x = 10*cos(t);
+	getLightSource()[1].position.y = 10*sin(t);
 
   vec3 colors[NR_OF_LIGHTSOURCES], positions[NR_OF_LIGHTSOURCES];
 	

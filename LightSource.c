@@ -4,7 +4,7 @@ LightSource lightSources[NR_OF_LIGHTSOURCES];
 
 void initLightSource(){
 		Point3D color = {0.8f, 0.0f, 0.0f};
-		Point3D position = {5.0f, 5.0f, 10.0f};
+		Point3D position = {0.0f, 0.0f, 0.0f};
 
 		lightSources[0].position= position;
 		lightSources[0].intensity = 100;
