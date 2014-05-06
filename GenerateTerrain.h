@@ -22,6 +22,7 @@
 typedef  struct{
 	float terrainMaxRadius;
 	vec3 velocity;
+  vec3 position;
 	mat4 scaleAndPos;
 	Model *sphereModel;
 } Sphere;

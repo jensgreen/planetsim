@@ -5,6 +5,8 @@
 
 typedef struct{
   mat4 matrix;
+  mat4 totalrot;
+  vec3 position;
   float moveSpeed;
   float mouseSens;
 } Camera;
@@ -13,6 +15,7 @@ void initCamera();
 
 Camera getCamera();
 
+void moveCamera(float x, float y, float z);
 void moveCameraForward();
 void moveCameraBack();
 void moveCameraRight();
