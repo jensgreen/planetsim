@@ -12,8 +12,10 @@
 #include <math.h>
 #include "controls.h"
 #include "Skybox.h"
+#include "LightSource.h"
 
 mat4 projectionMatrix;
+
 
 typedef  struct{
 	float radius;
@@ -58,7 +60,7 @@ void init(void)
 
 	// Load and compile shader
 	texprogram = loadShaders("terrain.vert", "terrain.frag");
-	program = loadShaders("diffuse.vert", "diffuse.frag");
+	program = loadShaders("untexturedlight.vert", "untexturedlight.frag");
 	glUseProgram(texprogram);
 	printError("init shader");
 
@@ -77,10 +79,32 @@ void init(void)
 	initSphere(&theSphere,100, 100, 100, 0.2);
 	scaleSphere(&theSphere,1000);
 	// Load terrain data
+	initLightSource();
+	//init light
 	printError("init terrain");
 }
 
+float t;
 
+void uploadLightToShader(){
+  t += 0.03;
+	getLightSource()[0].position.z = 10*cos(t);
+	getLightSource()[0].position.y = 10*sin(t);
+
+
+	getLightSource()[1].position.x = 10*cos(t);
+	getLightSource()[1].position.y = 10*sin(t);
+
+  vec3 colors[NR_OF_LIGHTSOURCES], positions[NR_OF_LIGHTSOURCES];
+	
+  for(int i = 0; i < NR_OF_LIGHTSOURCES; i++){
+    colors[i] = getLightSource()[i].color;
+    positions[i] = getLightSource()[i].position;
+  }
+
+  glUniform3fv(glGetUniformLocation(program, "lightSourcesPos"), NR_OF_LIGHTSOURCES, &positions[0].x);
+	glUniform3fv(glGetUniformLocation(program, "lightSourcesColor"), NR_OF_LIGHTSOURCES, &colors[0].x);
+}
 
 void drawSphere(Sphere *sphere, mat4 tot){
 	glUseProgram(program);
@@ -102,6 +126,7 @@ void display(void)
 	printError("pre display");
 
 	glUseProgram(program);
+	uploadLightToShader();
 
 	// Build matrix
 
@@ -133,8 +158,8 @@ int main(int argc, char **argv)
 	glutDisplayFunc(display);
 	initSkybox();
 	initCamera();
-  initControls(WINDOW_WIDTH, WINDOW_HEIGHT);
-  init ();
+	initControls(WINDOW_WIDTH, WINDOW_HEIGHT);
+	init ();
 	initKeymapManager();
 	glutTimerFunc(20, &timer, 0);
 

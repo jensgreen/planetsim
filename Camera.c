@@ -6,7 +6,7 @@ void initCamera(){
   camera.moveSpeed = 50;
   camera.mouseSens = 0.0005;
   
-  camera.matrix = lookAt(10, 0, 10,
+  camera.matrix = lookAt(10000, 0, 10000,
 			0, 0, 0,
 			0.0, 1.0, 0.0);
 }

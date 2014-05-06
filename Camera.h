@@ -1,3 +1,6 @@
+#ifndef __CAMERA__
+#define __CAMERA__
+
 #include "VectorUtils3.h"
 
 typedef struct{
@@ -16,3 +19,5 @@ void moveCameraRight();
 void moveCameraLeft();
 
 void rotateCamera(int dx, int dy);
+
+#endif
