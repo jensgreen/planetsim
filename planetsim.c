@@ -20,7 +20,7 @@
 
 mat4 projectionMatrix;
 
-Sphere planets[2];
+Sphere planets[1];
 
 void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, float terCons, char *s){
 	sphere->scaleAndPos = Mult(T(x,y,z),IdentityMatrix());
@@ -45,17 +45,16 @@ int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
 GLuint texprogram, program;
 GLuint tex1, tex2;
 TextureData ttex; // terrain
-
+float left = -0.1, right = 0.1, down = -0.1, up = 0.1, znear = 0.2, zfar = 100000.0;
 
 void init(void)
 {
 	// GL inits
 	glClearColor(0,0,0,0);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
 	printError("GL inits");
 
-	projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 100000.0);
+	projectionMatrix = frustum(left, right, down, up, znear, zfar);
 
 	// Load and compile shader
 	texprogram = loadShaders("terrain.vert", "terrain.frag");
@@ -73,13 +72,11 @@ void init(void)
 
 	// Load models
 	printf("Loading models\n");
-	initSphere(&planets[0],10000, 10000 ,10000,10000, 0.1,"HD_SPHERE_2015.obj");
+	initSphere(&planets[0],0, 0 ,0,0, 0.1,"HD_SPHERE_2015.obj");
 
 	scaleSphere(&planets[0],10000);
 
 
-	initSphere(&planets[1],-10000, 0, -10000,10000,0.1,"HD_SPHERE_2015.obj");
-	scaleSphere(&planets[1],10000);
 
 	// Load terrain data
 	initLightSource();
@@ -109,13 +106,35 @@ void uploadLightToShader(){
 	glUniform3fv(glGetUniformLocation(program, "lightSourcesColor"), NR_OF_LIGHTSOURCES, &colors[0].x);
 }
 
+bool isInFrustum(mat4 tot)
+{
+	mat4 projSphere = Mult(projectionMatrix, tot);
+	vec3 left = (vec3){projectionMatrix.m[3]+projectionMatrix.m[0],projectionMatrix.m[7]+projectionMatrix.m[4],projectionMatrix.m[11]+projectionMatrix.m[8]};
+	vec3 right = (vec3){projectionMatrix.m[3]-projectionMatrix.m[0],projectionMatrix.m[7]-projectionMatrix.m[4],projectionMatrix.m[11]-projectionMatrix.m[8]};
+	vec3 bot = (vec3){projectionMatrix.m[3]+projectionMatrix.m[1],projectionMatrix.m[7]+projectionMatrix.m[5],projectionMatrix.m[11]+projectionMatrix.m[9]};
+	vec3 top = (vec3){projectionMatrix.m[3]-projectionMatrix.m[1],projectionMatrix.m[7]-projectionMatrix.m[5],projectionMatrix.m[11]-projectionMatrix.m[9]};	
+	vec3 far = (vec3){projectionMatrix.m[3]-projectionMatrix.m[2],projectionMatrix.m[7]-projectionMatrix.m[6],projectionMatrix.m[11]-projectionMatrix.m[10]};	
+	vec3 near = (vec3){projectionMatrix.m[3]+projectionMatrix.m[2],projectionMatrix.m[7]+projectionMatrix.m[6],projectionMatrix.m[11]+projectionMatrix.m[10]};
+	
+//	float dp = DotProduct((vec4){projSphere.m[0], projSphere.m[5], projSphere.m[10],projSphere.m[15]},(vec4){projectionMatrix.m[0],projectionMatrix.m[1],projectionMatrix.m[2],projectionMatrix.m[3]});	
+
+	float dp = projSphere.m[0]*(projectionMatrix.m[0]+projectionMatrix.m[12])+ projSphere.m[5]*(projectionMatrix.m[1]+projectionMatrix.m[13])+projSphere.m[10]*(projectionMatrix.m[2]+projectionMatrix.m[14])+projSphere.m[15]*(projectionMatrix.m[3]+projectionMatrix.m[15]); 
+
+	//printf("x: %f, y: %f, z: %f\n", left.x,left.y, left.z);
+	//printf("x: %f, y: %f, z: %f\n\n", projSphere.m[0], projSphere.m[5], projSphere.m[10]); 	
+	printf("dotLeft: %f\n", dp);
+	return true;
+}
+
 void drawSphere(Sphere *sphere, mat4 tot){
 	glUseProgram(program);
 	mat4 total = tot;
 	total = Mult(total, sphere->scaleAndPos);
+	isInFrustum(total);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 	DrawModel(sphere->sphereModel, program, "inPosition", "inNormal", NULL);	
 }
+
 
 void display(void)
 {
@@ -139,7 +158,6 @@ void display(void)
 
 	drawSkybox(projectionMatrix, getCamera().matrix);
 	drawSphere(&planets[0], total);
-	drawSphere(&planets[1], total);
 	printError("display 2");
 
 	glutSwapBuffers();
