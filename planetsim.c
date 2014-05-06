@@ -51,7 +51,7 @@ void init(void)
 {
 	// GL inits
 	glClearColor(0,0,0,0);
-	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	printError("GL inits");
 
