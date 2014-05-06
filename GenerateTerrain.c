@@ -11,17 +11,26 @@
         #include <GL/gl.h>  
 #endif 
 
-Model* ChangeNormals(Model *sphereModel) {
+void ChangeNormals(Sphere *sphere) {
+	Model *sphereModel = sphere->sphereModel;
         printf("Size indexarray: %d, Size vertexArray: %d\n",sphereModel->numIndices, sphereModel->numVertices);
 	vec3 curVer1, curVer2, curVer3, out;
+	
 
+	float maxRadius = 0;
+	float curRadius = 0;
 //Empty normalArray
 	for(int i=0; i<sphereModel->numVertices;i++){
 		sphereModel->normalArray[i*3]=0.0;
 		sphereModel->normalArray[i*3+1]=0.0;
 		sphereModel->normalArray[i*3+1]=0.0;
+		curRadius =sqrt(sphereModel->vertexArray[i*3]*sphereModel->vertexArray[i*3]+sphereModel->vertexArray[i*3+1]*sphereModel->vertexArray[i*3+1]+sphereModel->vertexArray[i*3+2]*sphereModel->vertexArray[i*3+2]); 
+		if(curRadius>maxRadius){
+			maxRadius=curRadius;
+		}
 	}
-
+	
+	sphere->terrainMaxRadius = maxRadius;
 
 //Calculating normalVectors for every triangle and setting adding that normal to all three vertex normals
 	for(int i=0; i<sphereModel->numIndices/3;i++){
@@ -47,13 +56,11 @@ Model* ChangeNormals(Model *sphereModel) {
 		sphereModel->normalArray[sphereModel->indexArray[i*3+2]*3+1] += out.y;
 		sphereModel->normalArray[sphereModel->indexArray[i*3+2]*3+2] += out.z;
 	}	
-
-	return sphereModel;
 }
 
 
 //Method assume that the model i a sphere and the sphere center is origo. Should be fixed before push.
-Model* GenerateTerrain(Model *sphereModel, /*int scaleSphere,*/ int maxIterations, float addSubConst){
+Model* GenerateTerrain(Sphere *sphere, /*int scaleSphere,*/ int maxIterations, float addSubConst){
 	vec3 newPos;
 	vec3 planeNorm;
 	vec3 pointNormal;
@@ -63,27 +70,27 @@ Model* GenerateTerrain(Model *sphereModel, /*int scaleSphere,*/ int maxIteration
 		planeNorm.y = (double)rand() / (double)RAND_MAX - 0.5 ;
 		planeNorm.z = (double)rand() / (double)RAND_MAX - 0.5 ;
 		planeNorm = Normalize(planeNorm);
-		for(int i = 0; i < sphereModel->numVertices; i++){
-			pointNormal.x = sphereModel->normalArray[3*i];
-			pointNormal.y = sphereModel->normalArray[3*i+1];
-			pointNormal.z = sphereModel->normalArray[3*i+2]; 
+		for(int i = 0; i < sphere->sphereModel->numVertices; i++){
+			pointNormal.x = sphere->sphereModel->normalArray[3*i];
+			pointNormal.y = sphere->sphereModel->normalArray[3*i+1];
+			pointNormal.z = sphere->sphereModel->normalArray[3*i+2]; 
 			
-			newPos.x = sphereModel->vertexArray[3*i];//+sphereModel->normalArray[3*i];
-			newPos.y = sphereModel->vertexArray[3*i+1];//+sphereModel->normalArray[3*i+1];
-			newPos.z = sphereModel->vertexArray[3*i+2];//+sphereModel->normalArray[3*i+2];
+			newPos.x = sphere->sphereModel->vertexArray[3*i];//+sphereModel->normalArray[3*i];
+			newPos.y = sphere->sphereModel->vertexArray[3*i+1];//+sphereModel->normalArray[3*i+1];
+			newPos.z = sphere->sphereModel->vertexArray[3*i+2];//+sphereModel->normalArray[3*i+2];
 			if(DotProduct(planeNorm, newPos)>0) {	
 				newPos = VectorAdd(newPos, ScalarMult(pointNormal, addSubConst));
 			} else {
 				newPos = VectorSub(newPos, ScalarMult(pointNormal, addSubConst));
 			}
-			sphereModel->vertexArray[3*i] = newPos.x;
-			sphereModel->vertexArray[3*i+1] = newPos.y;
-			sphereModel->vertexArray[3*i+2] = newPos.z;
+			sphere->sphereModel->vertexArray[3*i] = newPos.x;
+			sphere->sphereModel->vertexArray[3*i+1] = newPos.y;
+			sphere->sphereModel->vertexArray[3*i+2] = newPos.z;
 		}
 	}
 
-	sphereModel = ChangeNormals(sphereModel);
+	/*sphereModel = */ChangeNormals(sphere);
 
-	return LoadDataToModel(sphereModel->vertexArray, sphereModel->normalArray, NULL, NULL, sphereModel->indexArray, sphereModel->numVertices, sphereModel->numIndices);
+	return LoadDataToModel(sphere->sphereModel->vertexArray, sphere->sphereModel->normalArray, NULL, NULL, sphere->sphereModel->indexArray, sphere->sphereModel->numVertices, sphere->sphereModel->numIndices);
 }
 

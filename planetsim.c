@@ -1,3 +1,7 @@
+
+#ifndef __PLANETSIM__
+#define __PLANETSIM__
+
 #ifdef __APPLE__
 	#include <OpenGL/gl3.h>
 	#include "MicroGlut.h"
@@ -16,25 +20,20 @@
 
 mat4 projectionMatrix;
 
+Sphere planets[2];
 
-typedef  struct{
-	float radius;
-	vec3 velocity;
-	mat4 scaleAndPos;
-} Sphere;
-
-Sphere theSphere;
-Model *sphereModel;
-
-void initSphere(Sphere *sphere,float x,float z, float dx, float dz){
-	sphere->scaleAndPos = IdentityMatrix();
-	sphere->radius = 1.0;
-	sphere->velocity.x = dx; 
-	sphere->velocity.z = dz; 
+void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, float terCons, char *s){
+	sphere->scaleAndPos = Mult(T(x,y,z),IdentityMatrix());
+	
+	sphere->terrainMaxRadius = 1.0;
+	sphere->sphereModel=LoadModelPlus(s);
+	sphere->sphereModel = GenerateTerrain(sphere,terIter,terCons);
+	printf("Sphere maxradius: %f\n", sphere->terrainMaxRadius);
 }
 
 void scaleSphere(Sphere *sphere, float s){
 	sphere->scaleAndPos = Mult(sphere->scaleAndPos, S(s,s,s));
+	sphere->terrainMaxRadius*=s;
 }
 
 
@@ -74,10 +73,14 @@ void init(void)
 
 	// Load models
 	printf("Loading models\n");
-	sphereModel = LoadModel("VERY_HD_SPHERE_2015.obj");
-	sphereModel = GenerateTerrain(sphereModel, 1000 , 0.7);
-	initSphere(&theSphere,100, 100, 100, 0.2);
-	scaleSphere(&theSphere,1000);
+	initSphere(&planets[0],10000, 10000 ,10000,10000, 0.1,"HD_SPHERE_2015.obj");
+
+	scaleSphere(&planets[0],10000);
+
+
+	initSphere(&planets[1],-10000, 0, -10000,10000,0.1,"HD_SPHERE_2015.obj");
+	scaleSphere(&planets[1],10000);
+
 	// Load terrain data
 	initLightSource();
 	//init light
@@ -111,7 +114,7 @@ void drawSphere(Sphere *sphere, mat4 tot){
 	mat4 total = tot;
 	total = Mult(total, sphere->scaleAndPos);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
-	DrawModel(sphereModel, program, "inPosition", "inNormal", NULL);	
+	DrawModel(sphere->sphereModel, program, "inPosition", "inNormal", NULL);	
 }
 
 void display(void)
@@ -135,7 +138,8 @@ void display(void)
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
 	drawSkybox(projectionMatrix, getCamera().matrix);
-	drawSphere(&theSphere, total);
+	drawSphere(&planets[0], total);
+	drawSphere(&planets[1], total);
 	printError("display 2");
 
 	glutSwapBuffers();
@@ -168,3 +172,5 @@ int main(int argc, char **argv)
 	glutMainLoop();
 	exit(0);
 }
+//Endif for ifndef __PLANETSIM__
+#endif
