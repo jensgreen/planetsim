@@ -3,7 +3,7 @@ Camera camera;
 
 void initCamera(){
 
-  camera.moveSpeed = 50;
+  camera.moveSpeed = 500;
   camera.mouseSens = 0.0005;
 
   camera.position.x = 0;
@@ -31,7 +31,7 @@ void moveCamera(float x, float y, float z){
 
  vec3 dirvec = MultVec3(camera.totalrot,dir);
 printf("x: %f, y: %f, z:%f\n",dirvec.x,dirvec.y,dirvec.z);
-  //camera.position = VectorAdd(camera.position, dirvec);
+  camera.position = VectorAdd(camera.position, dirvec);
 }
 
 void moveCameraForward(){
@@ -51,21 +51,26 @@ void moveCameraLeft(){
 }
 
 void rotateCamera(int dx, int dy){
-  
+ mat4 frotMat; 
   if(dx != 0){
   vec3 y = (vec3){0,1,0};
   vec3 x = (vec3){1,0,0};
 
-mat4 rotMat = ArbRotate(y, (float)(dx)*camera.mouseSens);
-  camera.totalrot = Mult(rotMat,camera.totalrot);
+  frotMat = ArbRotate(y, (float)(dx)*camera.mouseSens);
+  camera.totalrot = Mult(frotMat,camera.totalrot);
   }
 
   
   if(dy != 0 ){
-  vec3 x = (vec3){1,0,0};
-  vec3 y = (vec3){0,1,0};
+vec3 x;
+if(dx != 0){
+	x = MultVec3(frotMat, (vec3){1,0,0});
+} else {
+  x = (vec3){1,0,0};
+}  
+vec3 y = (vec3){0,1,0};
 mat4 rotMat = ArbRotate(x, (float)(dy)*camera.mouseSens);
-  camera.totalrot = Mult(rotMat,camera.totalrot);
+	camera.totalrot = Mult(rotMat,camera.totalrot);
   }
 
    
