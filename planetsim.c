@@ -72,7 +72,7 @@ void init(void)
 
 	// Load models
 	printf("Loading models\n");
-	initSphere(&planets[0],0, 0 ,0,0, 0.1,"HD_SPHERE_2015.obj");
+	initSphere(&planets[0],10, 10 ,10,0, 0.1,"HD_SPHERE_2015.obj");
 
 	scaleSphere(&planets[0],10000);
 
@@ -109,6 +109,8 @@ void uploadLightToShader(){
 bool isInFrustum(mat4 tot)
 {
 	mat4 projSphere = Mult(projectionMatrix, tot);
+	printf("x: %f, y: %f, z: %f\n",getCamera().matrix.m[3],getCamera().matrix.m[7],getCamera().matrix.m[11]);
+	
 	vec3 left = (vec3){projectionMatrix.m[3]+projectionMatrix.m[0],projectionMatrix.m[7]+projectionMatrix.m[4],projectionMatrix.m[11]+projectionMatrix.m[8]};
 	vec3 right = (vec3){projectionMatrix.m[3]-projectionMatrix.m[0],projectionMatrix.m[7]-projectionMatrix.m[4],projectionMatrix.m[11]-projectionMatrix.m[8]};
 	vec3 bot = (vec3){projectionMatrix.m[3]+projectionMatrix.m[1],projectionMatrix.m[7]+projectionMatrix.m[5],projectionMatrix.m[11]+projectionMatrix.m[9]};
@@ -126,11 +128,14 @@ bool isInFrustum(mat4 tot)
 	return true;
 }
 
-void drawSphere(Sphere *sphere, mat4 tot){
+void drawSphere(Sphere *sphere, mat4 tot, mat4 c){
 	glUseProgram(program);
 	mat4 total = tot;
-	total = Mult(total, sphere->scaleAndPos);
-	isInFrustum(total);
+	sphere->scaleAndPos=Mult(sphere->scaleAndPos,Ry(0.01));
+	//total = Mult(total, sphere->scaleAndPos);
+	//total = Mult(total, c);
+	isInFrustum(sphere->scaleAndPos);
+	total = Mult(c, sphere->scaleAndPos);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 	DrawModel(sphere->sphereModel, program, "inPosition", "inNormal", NULL);	
 }
@@ -153,11 +158,11 @@ void display(void)
 	// Build matrix
 
 	modelView = IdentityMatrix();
-	total = Mult(getCamera().matrix, modelView);
+	//total = Mult(getCamera().matrix, modelView);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
 	drawSkybox(projectionMatrix, getCamera().matrix);
-	drawSphere(&planets[0], total);
+	drawSphere(&planets[0], modelView, getCamera().matrix);
 	printError("display 2");
 
 	glutSwapBuffers();
