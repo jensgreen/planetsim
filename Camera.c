@@ -4,22 +4,34 @@ Camera camera;
 void initCamera(){
 
   camera.moveSpeed = 50;
-  camera.mouseSens = 0.05;
+  camera.mouseSens = 0.0005;
 
   camera.position.x = 0;
   camera.position.y = 0;
   camera.position.z = 0;
 
   camera.totalrot = IdentityMatrix();
-}
+/*int dy = 100;  
+vec3 y = (vec3){0,1,0};
+  y = MultVec3(camera.totalrot, y);
+  vec3 x = (vec3){1,0,0};
+  x = MultVec3(camera.totalrot, x);
+printf("xx: %f, xy: %f, xz:%f\n",x.x,x.y,x.z);
+printf("yx: %f, yy: %f, yz:%f\n",y.x,y.y,y.z);
+
+mat4 rotMat = ArbRotate(x, (float)(dy)*camera.mouseSens);
+  camera.totalrot = Mult(camera.totalrot,rotMat);
+*/}
 
 void moveCamera(float x, float y, float z){
   vec3 dir;
   dir.x = x;
   dir.y = y;
   dir.z = z;
-  vec3 dirvec = MultVec3(camera.totalrot, dir);
-  camera.position = VectorAdd(camera.position, dirvec);
+
+ vec3 dirvec = MultVec3(camera.totalrot,dir);
+printf("x: %f, y: %f, z:%f\n",dirvec.x,dirvec.y,dirvec.z);
+  //camera.position = VectorAdd(camera.position, dirvec);
 }
 
 void moveCameraForward(){
@@ -39,29 +51,27 @@ void moveCameraLeft(){
 }
 
 void rotateCamera(int dx, int dy){
+  
+  if(dx != 0){
+  vec3 y = (vec3){0,1,0};
+  vec3 x = (vec3){1,0,0};
+
+mat4 rotMat = ArbRotate(y, (float)(dx)*camera.mouseSens);
+  camera.totalrot = Mult(rotMat,camera.totalrot);
+  }
+
+  
+  if(dy != 0 ){
   vec3 x = (vec3){1,0,0};
   vec3 y = (vec3){0,1,0};
-  x = MultVec3(camera.totalrot, x);
-  y = MultVec3(camera.totalrot, y);
-  
-  vec3 scalX, scalY;
-  
-  if(dx > 0 ){
-    scalX= ScalarMult(x, dx);
-  }else{
-    scalX = (vec3){0,0,0};
+mat4 rotMat = ArbRotate(x, (float)(dy)*camera.mouseSens);
+  camera.totalrot = Mult(rotMat,camera.totalrot);
   }
 
-  if(dy > 0){
-    scalY = ScalarMult(y, dy);
-  }else{
-    scalY = (vec3){0,0,0};
-  }
+   
+  
 
-  //mat4 rotMat = ArbRotate(x, (float)(dy)*camera.mouseSens);
-  mat4 rotMat = ArbRotate(Normalize(VectorAdd(scalX,scalY)), camera.mouseSens);
-  //mat4 rotMat = Mult(Rx((float)(dy)*camera.mouseSens),Ry((float)(-(dx))*camera.mouseSens));
-  camera.totalrot = Mult(camera.totalrot, rotMat);
+
 }
 
 Camera getCamera(){
@@ -69,7 +79,7 @@ Camera getCamera(){
 }
 
 mat4 getViewMatrix(){
-  return Mult(camera.totalrot, getCameraPositionMatrix());
+  return Mult(camera.totalrot,getCameraPositionMatrix());
 }
 
 mat4 getCameraPositionMatrix(){
