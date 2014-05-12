@@ -4,16 +4,14 @@
 #include "VectorUtils3.h"
 
 typedef struct{
-  mat4 matrix;
-  mat4 totalrot;
-  vec3 position;
+  float x,y,z,xRot,yRot;
   float moveSpeed;
   float mouseSens;
 } Camera;
 
 void initCamera();
 
-Camera getCamera();
+mat4 getCameraMat();
 
 void moveCamera(float x, float y, float z);
 void moveCameraForward();
@@ -23,4 +21,11 @@ void moveCameraLeft();
 
 void rotateCamera(int dx, int dy);
 
+mat4 getCameraTotRot();
+
+vec3 getCameraForwardVec();
+
+vec3 getCameraUpVec();
+
+vec3 getCameraPosVec();
 #endif

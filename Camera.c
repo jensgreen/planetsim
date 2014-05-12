@@ -3,29 +3,20 @@ Camera camera;
 
 void initCamera(){
 
-  camera.moveSpeed = 50;
+  camera.moveSpeed = 100;
   camera.mouseSens = 0.0005;
-
-  camera.position.x = 0;
-  camera.position.y = 0;
-  camera.position.z = 0;
-
-  camera.matrix = lookAt(camera.position.x, camera.position.y, camera.position.z,
-      1, 0, 0,
-      0.0, 1.0, 0.0);
-  camera.totalrot = IdentityMatrix();
+	camera.x = 0;
+	camera.y = 0;
+	camera.z = 0;
+	camera.xRot = 0;
+	camera.yRot = 0;
 }
 
 void moveCamera(float x, float y, float z){
-  vec3 dir;
-  dir.x = x;
-  dir.y = y;
-  dir.z = z;
-  vec3 dirvec = MultVec3(camera.totalrot, dir);
-
-  camera.position = VectorAdd(camera.position, dirvec);
-  printf("@Camera.h: camera.position: %f, %f, %f\n", camera.position.x, camera.position.y, camera.position.z);
-  camera.matrix = Mult(T(dir.x, dir.y, dir.z), camera.matrix);
+	vec3 forward = getCameraForwardVec();
+	camera.x += forward.x*z;
+	camera.y += forward.y*z;
+	camera.z += forward.z*z;
 }
 
 void moveCameraForward(){
@@ -45,12 +36,30 @@ void moveCameraLeft(){
 }
 
 void rotateCamera(int dx, int dy){
-  mat4 rotMat = Mult(Rx((float)(dy)*camera.mouseSens),Ry((float)(-(dx))*camera.mouseSens));
-  camera.totalrot = Mult(camera.totalrot, rotMat);
-  camera.matrix = Mult(rotMat, camera.matrix);
-
+	camera.xRot += dy*camera.mouseSens;
+	camera.yRot += dx*camera.mouseSens;
 }
 
-Camera getCamera(){
-  return camera;
+vec3 getCameraForwardVec(){
+	mat4 totRot = getCameraTotRot();
+	vec3 forward = (vec3){totRot.m[2],totRot.m[6],totRot.m[10]};
+	return forward; 
+}
+
+vec3 getCameraUpVec(){
+	mat4 totRot = getCameraTotRot();
+	vec3 up = (vec3){totRot.m[1],totRot.m[5],totRot.m[9]};
+	return up;
+}
+
+mat4 getCameraTotRot(){
+	return Mult(ArbRotate((vec3){1,0,0},camera.xRot),ArbRotate((vec3){0,1,0},camera.yRot));
+}
+
+vec3 getCameraPosVec(){
+	return (vec3){camera.x,camera.y,camera.z};
+}
+
+mat4 getCameraMat(){
+  return Mult(getCameraTotRot(),T(camera.x,camera.y,camera.z));
 }

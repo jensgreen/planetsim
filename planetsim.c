@@ -39,7 +39,7 @@ void scaleSphere(Sphere *sphere, float s){
 	sphere->terrainMaxRadius*=s;
 }
 
-
+/*
 // Hardcoded nr of planets to 2
 Sphere getNearestSphere(){
 
@@ -74,7 +74,7 @@ Sphere getNearestSphere(){
   printf("@planetsim in getNearest..: closest planet = %i\n", indexToNearestSph);
   return planets[indexToNearestSph];
 }
-
+*/
 int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
 
 
@@ -110,18 +110,18 @@ void init(void)
 
   // Load models
   printf("Loading models\n");
-  initSphere(&planets[0],10000, 10000 ,10000,10000, 0.1,"HD_SPHERE_2015.obj");
+  initSphere(&planets[0],10000, 10000 ,10000,0, 0,"HD_SPHERE_2015.obj");
 
   scaleSphere(&planets[0],10000);
 
 
-  initSphere(&planets[1],-10000, 0, -10000,10000,0.1,"HD_SPHERE_2015.obj");
+  initSphere(&planets[1],-10000, 0, -10000,0,0,"HD_SPHERE_2015.obj");
   scaleSphere(&planets[1],10000);
 
   // Load terrain data
   initLightSource();
   //init light
-  getNearestSphere();
+  //getNearestSphere();
   printError("init terrain");
 }
 
@@ -162,22 +162,21 @@ void display(void)
   // clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  mat4 total, modelView;
+  mat4 total;
 
   printError("pre display");
 
   glUseProgram(program);
   uploadLightToShader();
 
-  getNearestSphere(); 
+  //getNearestSphere(); 
 
   // Build matrix
 
-  modelView = IdentityMatrix();
-  total = Mult(getCamera().matrix, modelView);
+  total = getCameraMat();
   glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
-  drawSkybox(projectionMatrix, getCamera().matrix);
+  drawSkybox(projectionMatrix, getCameraMat());
   drawSphere(&planets[0], total);
   drawSphere(&planets[1], total);
   printError("display 2");
