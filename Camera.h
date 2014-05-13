@@ -18,8 +18,9 @@ void moveCameraForward();
 void moveCameraBack();
 void moveCameraRight();
 void moveCameraLeft();
-
 void rotateCamera(int dx, int dy);
+mat4 getViewMatrix();
+mat4 getCameraPositionMatrix();
 
 mat4 getCameraTotRot();
 

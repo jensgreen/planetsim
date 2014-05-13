@@ -31,7 +31,6 @@ void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, floa
 	sphere->terrainMaxRadius = 1.0;
 	sphere->sphereModel=LoadModelPlus(s);
 	sphere->sphereModel = GenerateTerrain(sphere,terIter,terCons);
-	printf("Sphere maxradius: %f\n", sphere->terrainMaxRadius);
 }
 
 void scaleSphere(Sphere *sphere, float s){
@@ -71,7 +70,6 @@ Sphere getNearestSphere(){
 
   }
 
-  printf("@planetsim in getNearest..: closest planet = %i\n", indexToNearestSph);
   return planets[indexToNearestSph];
 }
 */
