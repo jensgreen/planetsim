@@ -38,16 +38,16 @@ void scaleSphere(Sphere *sphere, float s){
 	sphere->terrainMaxRadius*=s;
 }
 
-/*
+
 // Hardcoded nr of planets to 2
 Sphere getNearestSphere(){
 
   int nr_of_planets = 2;
 
   vec3 planetPos = planets[0].position;
-  float dx = planetPos.x-getCamera().position.x;
-  float dy = planetPos.y-getCamera().position.y;
-  float dz = planetPos.z-getCamera().position.z;
+  float dx = getCameraPosVec().x;
+  float dy = getCameraPosVec().y;
+  float dz = getCameraPosVec().z;
 
   double shortestDist = sqrt(dx*dx+dy*dy+dz*dz);
   double currentDistance;
@@ -57,9 +57,9 @@ Sphere getNearestSphere(){
     planetPos = planets[i].position;
 
 
-    dx = planetPos.x-getCamera().position.x;
-    dy = planetPos.y-getCamera().position.y;
-    dz = planetPos.z-getCamera().position.z;
+    dx = getCameraPosVec().x;
+    dy = getCameraPosVec().y;
+    dz = getCameraPosVec().z;
 
     currentDistance = sqrt(dx*dx+dy*dy+dz*dz);
 
@@ -70,9 +70,10 @@ Sphere getNearestSphere(){
 
   }
 
+
   return planets[indexToNearestSph];
 }
-*/
+
 int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
 
 
@@ -119,7 +120,7 @@ void init(void)
   // Load terrain data
   initLightSource();
   //init light
-  //getNearestSphere();
+  getNearestSphere();
   printError("init terrain");
 }
 
@@ -167,7 +168,7 @@ void display(void)
   glUseProgram(program);
   uploadLightToShader();
 
-  //getNearestSphere(); 
+  getNearestSphere(); 
 
   // Build matrix
 

@@ -4,7 +4,7 @@
 #include "VectorUtils3.h"
 
 typedef struct{
-  float x,y,z,xRot,yRot;
+  vec3 position, forward, up;
   float moveSpeed;
   float mouseSens;
 } Camera;
@@ -19,10 +19,7 @@ void moveCameraBack();
 void moveCameraRight();
 void moveCameraLeft();
 void rotateCamera(int dx, int dy);
-mat4 getViewMatrix();
-mat4 getCameraPositionMatrix();
 
-mat4 getCameraTotRot();
 
 vec3 getCameraForwardVec();
 
