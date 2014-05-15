@@ -1,10 +1,10 @@
 #include "VectorUtils3.h"
-#define NR_OF_LIGHTSOURCES 2
+#include "GenerateTerrain.h"
 
 typedef struct{
-  Point3D position;
   GLfloat intensity;
   Point3D color;
+  Sphere sphere;
 } LightSource;
 
 void initLightSource();

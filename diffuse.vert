@@ -4,6 +4,7 @@ in  vec3 inPosition;
 in  vec3 inNormal;
 out vec3 exNormal;
 
+// NY
 uniform mat4 projMatrix;
 uniform mat4 mdlMatrix;
 

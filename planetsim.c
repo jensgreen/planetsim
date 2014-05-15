@@ -12,67 +12,20 @@
 #include "VectorUtils3.h"
 #include "loadobj.h"
 #include "LoadTGA.h"
-#include "GenerateTerrain.h"
 #include <math.h>
 #include "controls.h"
 #include "Skybox.h"
 #include "LightSource.h"
+#include "Sphere.h"
 
 mat4 projectionMatrix;
 
 
 Sphere planets[2];
 
-void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, float terCons, char *s){
-	sphere->scaleAndPos = Mult(T(x,y,z),IdentityMatrix());
-	sphere->position.x = x;
-	sphere->position.y = y;
-	sphere->position.z = z;
-	sphere->terrainMaxRadius = 1.0;
-	sphere->sphereModel=LoadModelPlus(s);
-	sphere->sphereModel = GenerateTerrain(sphere,terIter,terCons);
-}
-
-void scaleSphere(Sphere *sphere, float s){
-	sphere->scaleAndPos = Mult(sphere->scaleAndPos, S(s,s,s));
-	sphere->terrainMaxRadius*=s;
-}
 
 
-// Hardcoded nr of planets to 2
-Sphere getNearestSphere(){
 
-  int nr_of_planets = 2;
-
-  vec3 planetPos = planets[0].position;
-  float dx = getCameraPosVec().x;
-  float dy = getCameraPosVec().y;
-  float dz = getCameraPosVec().z;
-
-  double shortestDist = sqrt(dx*dx+dy*dy+dz*dz);
-  double currentDistance;
-  int indexToNearestSph = 0;
-
-  for(int i = 1; i < nr_of_planets; i++){
-    planetPos = planets[i].position;
-
-
-    dx = getCameraPosVec().x;
-    dy = getCameraPosVec().y;
-    dz = getCameraPosVec().z;
-
-    currentDistance = sqrt(dx*dx+dy*dy+dz*dz);
-
-    if(currentDistance < shortestDist){
-      indexToNearestSph = i;
-      shortestDist = currentDistance;
-    }
-
-  }
-
-
-  return planets[indexToNearestSph];
-}
 
 int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
 
@@ -81,6 +34,7 @@ int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
 GLuint texprogram, program;
 GLuint tex1, tex2;
 TextureData ttex; // terrain
+Sphere *sun;
 
 
 void init(void)
@@ -95,7 +49,8 @@ void init(void)
 
   // Load and compile shader
   texprogram = loadShaders("terrain.vert", "terrain.frag");
-  program = loadShaders("untexturedlight.vert", "untexturedlight.frag");
+  //program = loadShaders("untexturedlight.vert", "untexturedlight.frag");
+  program = loadShaders("diffuse.vert", "diffuse.frag");
   glUseProgram(texprogram);
   printError("init shader");
 
@@ -119,40 +74,17 @@ void init(void)
 
   // Load terrain data
   initLightSource();
+  vec3 pos = getSpherePosition(&getLightSource()[0].sphere);
+  initSphere(&getLightSource()[0].sphere,pos.x, pos.y,pos.z, 0,0.0,"HD_SPHERE_2015.obj");
+  pos = getSpherePosition(&getLightSource()[1].sphere);
+  
+  initSphere(&getLightSource()[1].sphere,pos.x, pos.y,pos.z,0,0,"HD_SPHERE_2015.obj");
+  scaleSphere(&getLightSource()[1].sphere, 1000);
+  
   //init light
-  getNearestSphere();
   printError("init terrain");
 }
 
-float t;
-
-void uploadLightToShader(){
-  t += 0.03;
-  getLightSource()[0].position.z = 10*cos(t);
-  getLightSource()[0].position.y = 10*sin(t);
-
-
-  getLightSource()[1].position.x = 10*cos(t);
-  getLightSource()[1].position.y = 10*sin(t);
-
-  vec3 colors[NR_OF_LIGHTSOURCES], positions[NR_OF_LIGHTSOURCES];
-
-  for(int i = 0; i < NR_OF_LIGHTSOURCES; i++){
-    colors[i] = getLightSource()[i].color;
-    positions[i] = getLightSource()[i].position;
-  }
-
-  glUniform3fv(glGetUniformLocation(program, "lightSourcesPos"), NR_OF_LIGHTSOURCES, &positions[0].x);
-  glUniform3fv(glGetUniformLocation(program, "lightSourcesColor"), NR_OF_LIGHTSOURCES, &colors[0].x);
-}
-
-void drawSphere(Sphere *sphere, mat4 tot){
-  glUseProgram(program);
-  mat4 total = tot;
-  total = Mult(total, sphere->scaleAndPos);
-  glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
-  DrawModel(sphere->sphereModel, program, "inPosition", "inNormal", NULL);	
-}
 
 void display(void)
 {
@@ -166,9 +98,7 @@ void display(void)
   printError("pre display");
 
   glUseProgram(program);
-  uploadLightToShader();
 
-  getNearestSphere(); 
 
   // Build matrix
 
@@ -176,8 +106,10 @@ void display(void)
   glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
   drawSkybox(projectionMatrix, getCameraMat());
-  drawSphere(&planets[0], total);
-  drawSphere(&planets[1], total);
+  drawSphere(&planets[0], total,program);
+  drawSphere(&planets[1], total,program);
+  //drawSphere(&getLightSource()[0].sphere, total,program);
+  //drawSphere(&getLightSource()[1].sphere, total,program);
   printError("display 2");
 
   glutSwapBuffers();
