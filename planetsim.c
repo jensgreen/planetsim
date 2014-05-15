@@ -105,9 +105,9 @@ void display(void)
   total = getCameraMat();
   glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
-//  drawSkybox(projectionMatrix, getCameraMat());
-  drawSphere(&planets[0], total,program);
-  drawSphere(&planets[1], total,program);
+  drawSkybox(projectionMatrix, getCameraMat());
+  //drawSphere(&planets[0], total,program);
+  //drawSphere(&planets[1], total,program);
   //drawSphere(&getLightSource()[0].sphere, total,program);
   //drawSphere(&getLightSource()[1].sphere, total,program);
   printError("display 2");
