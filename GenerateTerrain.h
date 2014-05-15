@@ -15,17 +15,10 @@
 #define M_PI           3.14159265358979323846
 #endif
 
-
+#include "Sphere.h"
 #include "loadobj.h"
 	
 
-typedef  struct{
-	float terrainMaxRadius;
-	vec3 velocity;
-  vec3 position;
-	mat4 scaleAndPos;
-	Model *sphereModel;
-} Sphere;
 
 
 //	void CopyVector(vec3 *v, vec3 *dest); // Will probably be removed
