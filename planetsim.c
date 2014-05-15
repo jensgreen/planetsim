@@ -18,11 +18,13 @@
 #include "Skybox.h"
 #include "LightSource.h"
 #include "Sphere.h"
+#include "Halo.h"
 
 mat4 projectionMatrix;
 
 
 Sphere planets[2];
+Halo haloes[1];
 
 
 int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
@@ -60,10 +62,10 @@ void init(void)
 
   // Load models
   printf("Loading models\n");
-  initSphere(&planets[0],0, 0 ,-10000,0, 0,"HD_SPHERE_2015.obj");
-
+  initSphere(&planets[0],0, 0 ,-5000,0, 0,"HD_SPHERE_2015.obj");
   scaleSphere(&planets[0],1000);
-
+  initHalo(&haloes[0], 0,0,-5000, "HD_SPHERE_2015.obj");
+  scaleHalo(&haloes[0],1000);
 
   initSphere(&planets[1],0, 0, 10000,0,0,"HD_SPHERE_2015.obj");
   scaleSphere(&planets[1],1000);
@@ -104,7 +106,8 @@ void display(void)
   glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
   drawSkybox(projectionMatrix, getCameraMat());
-  drawSphere(&planets[0], total, program);
+  // drawSphere(&planets[0], total, program);
+  drawHalo(&haloes[0], total, program);
   drawSphere(&planets[1], total, program);
   printError("display 2");
 
