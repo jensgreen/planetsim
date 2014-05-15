@@ -1,4 +1,6 @@
 #include "Sphere.h"
+#include "GenerateTerrain.h"
+#include <stdlib.h>
 
 void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, float terCons, char *s){
 	sphere->scaleAndPos = Mult(T(x,y,z),IdentityMatrix());
