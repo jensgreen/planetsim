@@ -2,10 +2,10 @@
 #define NR_OF_LIGHTSOURCES 2
 
 typedef struct{
-  Point3D position;
-  GLfloat intensity;
-  Point3D color;
+  vec3 position;
+  float intensity;
+  vec3 color;
 } LightSource;
 
-void initLightSource();
+void initLightSource(vec3 position, vec3 color, float intensity);
 LightSource* getLightSource();

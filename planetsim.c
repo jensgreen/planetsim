@@ -60,16 +60,16 @@ void init(void)
 
   // Load models
   printf("Loading models\n");
-  initSphere(&planets[0],10000, 10000 ,10000,0, 0,"HD_SPHERE_2015.obj");
+  initSphere(&planets[0],0, 0 ,-10000,0, 0,"HD_SPHERE_2015.obj");
 
-  scaleSphere(&planets[0],10000);
+  scaleSphere(&planets[0],1000);
 
 
-  initSphere(&planets[1],-10000, 0, -10000,0,0,"HD_SPHERE_2015.obj");
-  scaleSphere(&planets[1],10000);
+  initSphere(&planets[1],0, 0, 10000,0,0,"HD_SPHERE_2015.obj");
+  scaleSphere(&planets[1],1000);
 
   // Load terrain data
-  initLightSource();
+  initLightSource((vec3){0,0,1000}, (vec3){1,0,0}, 100);
   //init light
   printError("init terrain");
 }
@@ -77,23 +77,9 @@ void init(void)
 float t;
 
 void uploadLightToShader(){
-  t += 0.03;
-  getLightSource()[0].position.z = 10*cos(t);
-  getLightSource()[0].position.y = 10*sin(t);
-
-
-  getLightSource()[1].position.x = 10*cos(t);
-  getLightSource()[1].position.y = 10*sin(t);
-
-  vec3 colors[NR_OF_LIGHTSOURCES], positions[NR_OF_LIGHTSOURCES];
-
-  for(int i = 0; i < NR_OF_LIGHTSOURCES; i++){
-    colors[i] = getLightSource()[i].color;
-    positions[i] = getLightSource()[i].position;
-  }
-
-  glUniform3fv(glGetUniformLocation(program, "lightSourcesPos"), NR_OF_LIGHTSOURCES, &positions[0].x);
-  glUniform3fv(glGetUniformLocation(program, "lightSourcesColor"), NR_OF_LIGHTSOURCES, &colors[0].x);
+  LightSource *ls = getLightSource();  
+  glUniform3fv(glGetUniformLocation(program, "lightSourcesPos"), 1, &ls->position.x);
+  glUniform3fv(glGetUniformLocation(program, "lightSourcesColor"), 1,&ls->color.x);
 }
 
 
