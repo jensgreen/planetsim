@@ -13,11 +13,12 @@ void main(void)
 {	
 	float diffuse, ambient = 0.0;
 	float shade = 0;
-	vec3 lightPos, lightDir, color, pos;
-
+	vec3 lightPos, lightDir, color;
+	
+	
 	color = vec3(0);
 	// calc the vector light to vertice
-	lightDir = lightSourcesPos-pos;
+	lightDir = lightSourcesPos;
 	// Diffuse
 	diffuse = dot(normalize(exNormal), normalize(lightDir));
 	diffuse = max(0.0, diffuse); // No negative light	
