@@ -30,8 +30,8 @@ Halo haloes[1];
 int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
 
 
-// Reference to shader texprogram
-GLuint texprogram, program;
+// Reference to shaders
+GLuint texprogram, program, haloProgram;
 GLuint tex1, tex2;
 TextureData ttex; // terrain
 
@@ -49,6 +49,7 @@ void init(void)
   // Load and compile shader
   texprogram = loadShaders("terrain.vert", "terrain.frag");
   program = loadShaders("untexturedlight.vert", "untexturedlight.frag");
+  haloProgram = loadShaders("halo.vert", "halo.frag");
   glUseProgram(texprogram);
   printError("init shader");
 
@@ -57,21 +58,23 @@ void init(void)
 
   glUseProgram(program);
   glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+  glUseProgram(haloProgram);
+  glUniformMatrix4fv(glGetUniformLocation(haloProgram, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
-
+  glUseProgram(program);
 
   // Load models
   printf("Loading models\n");
-  initSphere(&planets[0],0, 0 ,-5000,0, 0,"HD_SPHERE_2015.obj");
+  initSphere(&planets[0],0, 0 ,5000,0, 0,"HD_SPHERE_2015.obj");
   scaleSphere(&planets[0],1000);
-  initHalo(&haloes[0], 0,0,-5000, "models/billboard.obj");
-  scaleHalo(&haloes[0],10000);
+  initHalo(&haloes[0], -10,-10,5000, "models/billboard.obj");
+  scaleHalo(&haloes[0],2500);
 
   initSphere(&planets[1],0, 0, 10000,0,0,"HD_SPHERE_2015.obj");
   scaleSphere(&planets[1],1000);
 
   // Load terrain data
-  initLightSource((vec3){0,0,1000}, (vec3){1,0,0}, 100);
+  initLightSource((vec3){0,0,-1000}, (vec3){1,0,0}, 100);
   //init light
   printError("init terrain");
 }
@@ -106,8 +109,8 @@ void display(void)
   glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
   drawSkybox(projectionMatrix, getCameraMat());
-  // drawSphere(&planets[0], total, program);
-  drawHalo(&haloes[0], total, program);
+  drawSphere(&planets[0], total, program);
+  drawHalo(&haloes[0], total, haloProgram);
   drawSphere(&planets[1], total, program);
   printError("display 2");
 
