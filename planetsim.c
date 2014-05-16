@@ -31,7 +31,7 @@ int WINDOW_HEIGHT = 1000, WINDOW_WIDTH = 1000;
 
 
 // Reference to shaders
-GLuint texprogram, program, haloProgram;
+GLuint texprogram, program, haloProgram, lightsourceShader;
 GLuint tex1, tex2;
 TextureData ttex; // terrain
 
@@ -50,6 +50,7 @@ void init(void)
   texprogram = loadShaders("terrain.vert", "terrain.frag");
   program = loadShaders("untexturedlight.vert", "untexturedlight.frag");
   haloProgram = loadShaders("halo.vert", "halo.frag");
+  lightsourceShader = loadShaders("lightsource.vert", "lightsource.frag");
   glUseProgram(texprogram);
   printError("init shader");
 
@@ -65,16 +66,23 @@ void init(void)
 
   // Load models
   printf("Loading models\n");
-  initSphere(&planets[0],0, 0 ,5000,0, 0,"models/HD_SPHERE_2015.obj");
-  scaleSphere(&planets[0],1000);
-  initHalo(&haloes[0], -10,-10,5000, "models/billboard.obj");
-  scaleHalo(&haloes[0],1150);
 
-  initSphere(&planets[1],0, 0, 10000,0,0,"models/HD_SPHERE_2015.obj");
-  scaleSphere(&planets[1],1000);
 
-  // Load terrain data
-  initLightSource((vec3){0,0,-1000}, (vec3){1,0,0}, 100);
+  // init planet 0
+  initSphere(&planets[0],0, 0 ,10000,500, 0.7,"models/HD_SPHERE_2015.obj");
+  scaleSphere(&planets[0],500);
+
+
+  //init planet 1
+  initSphere(&planets[1],0, 0, -18000,500,0.4,"models/HD_SPHERE_2015.obj");
+  scaleSphere(&planets[1],1500);
+
+  // init the sun and the sphere for the sun
+  initLightSource((vec3){0,0,0}, (vec3){1,0.75,0}, 100);
+  initSphere(&getLightSource()->sphere, 0,0,0,300,0.1,"models/HD_SPHERE_2015.obj");
+  scaleSphere(&getLightSource()->sphere, 3000);
+  initHalo(&haloes[0], 0, 0,0, "models/billboard.obj");
+  scaleHalo(&haloes[0],5000);
   //init light
   printError("init terrain");
 }
@@ -86,7 +94,6 @@ void uploadLightToShader(){
   glUniform3fv(glGetUniformLocation(program, "lightSourcesPos"), 1, &ls->position.x);
   glUniform3fv(glGetUniformLocation(program, "lightSourcesColor"), 1,&ls->color.x);
 }
-
 
 void display(void)
 {
@@ -106,12 +113,14 @@ void display(void)
   // Build matrix
 
   total = getCameraMat();
-  glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
   drawSkybox(projectionMatrix, getCameraMat());
   drawHalo(&haloes[0], total, haloProgram);
+
+  moveSphere(&planets[0]);
   drawSphere(&planets[0], total, program);
   drawSphere(&planets[1], total, program);
+  drawSphere(&getLightSource()->sphere, total, program);
   printError("display 2");
 
   glutSwapBuffers();

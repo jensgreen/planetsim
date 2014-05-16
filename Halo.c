@@ -1,7 +1,8 @@
 #include "Halo.h"
 #include "GenerateTerrain.h"
 #include "VectorUtils3.h"
-#include <stdlib.h>
+#include <stdlib.h>"
+#include "LightSource.h"
 
 void initHalo(Halo *halo, GLfloat x, GLfloat y, GLfloat z, char *modelPath){
 	halo->scaleAndPos = Mult(T(x,y,z),IdentityMatrix());
@@ -30,6 +31,7 @@ void drawHalo(Halo *halo, mat4 tot, GLuint shader) {
   total = Mult(total, mdlview);
   total = resetRotation(total, halo->scale);
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, total.m);
+  glUniform3fv(glGetUniformLocation(shader, "lightColor"), 1, &getLightSource()->color.x);
   DrawModel(halo->model, shader, "inPosition", NULL, "inTexCoord");	
 
   glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);

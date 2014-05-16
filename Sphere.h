@@ -7,6 +7,7 @@ typedef  struct{
 	vec3 velocity;
   vec3 position;
 	mat4 scaleAndPos;
+  float rot;
 	Model *sphereModel;
 } Sphere;
 
@@ -16,6 +17,8 @@ void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, floa
 void drawSphere(Sphere *sphere, mat4 tot, GLuint p);
 
 void scaleSphere(Sphere *sphere, float s);
+
+void moveSphere(Sphere *sphere);
 
 //Sphere getNearestSphere();
 

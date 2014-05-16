@@ -3,27 +3,32 @@ out vec4 outColor;
 
 
 in vec3 exNormal;
-in mat4 exPosition;
+in vec3 exPosition;
 
 uniform vec3 lightSourcesPos;
 uniform vec3 lightSourcesColor;
 
+uniform vec3 direction;
 
 void main(void)
 {	
-	float diffuse, ambient = 0.0;
-	float shade = 0;
-	vec3 lightPos, lightDir, color;
-	
-	
-	color = vec3(0);
-	// calc the vector light to vertice
-	lightDir = lightSourcesPos;
-	// Diffuse
-	diffuse = dot(normalize(exNormal), normalize(lightDir));
-	diffuse = max(0.0, diffuse); // No negative light	
-	color += (ambient+0.5*diffuse)*lightSourcesColor;	
-	outColor = vec4(color, 1.0);
+  float diffuse, ambient = 0.0;
+  float shade = 0;
+  vec3 lightDir, color = vec3(0.0, 0, 0.0);
 
-}
+  if(direction.x+direction.y+direction.z == 0){
+
+    outColor = vec4(lightSourcesColor, 1.0f);
+
+  }else{
+      // calc the vector light to vertice
+      lightDir = -normalize(direction);
+      // Diffuse
+      diffuse = dot(normalize(exNormal), lightDir);
+      //diffuse = max(0.0, diffuse); // No negative light	
+      color = (ambient+0.5*diffuse)*lightSourcesColor;	
+      //outColor = vec4(exPosition, 1.0);
+      outColor = vec4(color, 1.0f);
+    }
+  }
 
