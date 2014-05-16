@@ -14,5 +14,6 @@ typedef  struct{
 void initHalo(Halo *halo, GLfloat x, GLfloat y, GLfloat z, char *modelPath);
 void drawHalo(Halo *halo, mat4 tot, GLuint shader);
 void scaleHalo(Halo *halo, float s);
+mat4 resetRotation(mat4 tot, float scale);
 
 #endif

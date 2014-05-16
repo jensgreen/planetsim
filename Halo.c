@@ -24,6 +24,20 @@ void drawHalo(Halo *halo, mat4 tot, GLuint shader) {
   mat4 total = tot;
   mat4 mdlview = halo->scaleAndPos;
   total = Mult(total, mdlview);
+  total = resetRotation(total, halo->scale);
+
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, total.m);
   DrawModel(halo->model, shader, "inPosition", "inNormal", NULL);	
 }
+
+mat4 resetRotation(mat4 tot, float scale) {
+  //view-plane orient billboard (should be view-point orientation)
+  //zero rotation, keep scale using scaled identity matrix. keep translation.
+  mat4 total  = tot;
+  total.m[0]  = scale; total.m[1] = 0.0;   total.m[2] = 0.0;
+  total.m[4]  = 0.0;   total.m[5] = scale; total.m[6] = 0.0;
+  total.m[8]  = 0.0;   total.m[9] = 0.0;   total.m[10] = scale;
+  total.m[12] = 0.0;   total.m[13] = 0.0;  total.m[14] = 0.0; total.m[15] = 1;
+  return total;
+}
+
