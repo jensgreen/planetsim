@@ -20,16 +20,20 @@ void scaleHalo(Halo *halo, float s) {
 }
 
 void drawHalo(Halo *halo, mat4 tot, GLuint shader) {
+  glDisable(GL_DEPTH_TEST); // draw halo behind all planets; should be drawn right behind current planet
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glUseProgram(shader);
+
   mat4 total = tot;
   mat4 mdlview = halo->scaleAndPos;
   total = Mult(total, mdlview);
   total = resetRotation(total, halo->scale);
-
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, total.m);
   DrawModel(halo->model, shader, "inPosition", NULL, "inTexCoord");	
+
+  glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_DEPTH_TEST);
 }
 
 mat4 resetRotation(mat4 tot, float scale) {
