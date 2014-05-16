@@ -20,6 +20,8 @@ void scaleHalo(Halo *halo, float s) {
 }
 
 void drawHalo(Halo *halo, mat4 tot, GLuint shader) {
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glUseProgram(shader);
   mat4 total = tot;
   mat4 mdlview = halo->scaleAndPos;
@@ -27,7 +29,7 @@ void drawHalo(Halo *halo, mat4 tot, GLuint shader) {
   total = resetRotation(total, halo->scale);
 
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, total.m);
-  DrawModel(halo->model, shader, "inPosition", "inNormal", NULL);	
+  DrawModel(halo->model, shader, "inPosition", NULL, "inTexCoord");	
 }
 
 mat4 resetRotation(mat4 tot, float scale) {

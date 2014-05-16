@@ -68,7 +68,7 @@ void init(void)
   initSphere(&planets[0],0, 0 ,5000,0, 0,"HD_SPHERE_2015.obj");
   scaleSphere(&planets[0],1000);
   initHalo(&haloes[0], -10,-10,5000, "models/billboard.obj");
-  scaleHalo(&haloes[0],1500);
+  scaleHalo(&haloes[0],1150);
 
   initSphere(&planets[1],0, 0, 10000,0,0,"HD_SPHERE_2015.obj");
   scaleSphere(&planets[1],1000);
@@ -109,8 +109,8 @@ void display(void)
   glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 
   drawSkybox(projectionMatrix, getCameraMat());
-  drawSphere(&planets[0], total, program);
   drawHalo(&haloes[0], total, haloProgram);
+  drawSphere(&planets[0], total, program);
   drawSphere(&planets[1], total, program);
   printError("display 2");
 
