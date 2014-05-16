@@ -119,6 +119,8 @@ void display(void)
 
   moveSphere(&planets[0]);
   drawSphere(&planets[0], total, program);
+  
+  moveSphere(&planets[1]);
   drawSphere(&planets[1], total, program);
   drawSphere(&getLightSource()->sphere, total, program);
   printError("display 2");
