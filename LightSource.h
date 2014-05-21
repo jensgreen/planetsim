@@ -11,3 +11,5 @@ typedef struct{
 
 void initLightSource(vec3 position, vec3 color, float intensity);
 LightSource* getLightSource();
+
+Sphere* getLightSourceSphere();

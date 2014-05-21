@@ -13,4 +13,6 @@ LightSource* getLightSource(){
 	return &lightSources;
 }
 
-
+Sphere* getLightSourceSphere(){
+	return &lightSources.sphere;
+}

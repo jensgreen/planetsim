@@ -5,7 +5,7 @@
 
 void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, float terCons, char *s){
 	sphere->scaleAndPos = Mult(T(x,y,z),IdentityMatrix());
-  sphere->rot = 0;
+	sphere->rot = 0;
 	sphere->position.x = x;
 	sphere->position.y = y;
 	sphere->position.z = z;
@@ -56,7 +56,7 @@ bool inFrustum(mat4 spherePos, Sphere *sphere)
 
 	pos = VectorAdd((vec3){spherePos.m[3], spherePos.m[7], spherePos.m[11]},ScalarMult(Normalize(r),sphere->terrainMaxRadius));	
 	float dr = DotProduct(pos,r);
-	
+
 	pos = VectorAdd((vec3){spherePos.m[3], spherePos.m[7], spherePos.m[11]},ScalarMult(Normalize(left),sphere->terrainMaxRadius));		
 	float dl = DotProduct(pos,left);
 
@@ -66,12 +66,12 @@ bool inFrustum(mat4 spherePos, Sphere *sphere)
 	pos = VectorAdd((vec3){spherePos.m[3], spherePos.m[7], spherePos.m[11]},ScalarMult(Normalize(bot),sphere->terrainMaxRadius));	
 	float db = DotProduct(pos,bot);
 
-/*
-	printf("dotenr: %f\n", dr);
-	printf("dotenl: %f\n", dl);
-	printf("dotenu: %f\n", dt);
-	printf("dotend: %f\n\n", db);
-*/
+	/*
+	   printf("dotenr: %f\n", dr);
+	   printf("dotenl: %f\n", dl);
+	   printf("dotenu: %f\n", dt);
+	   printf("dotend: %f\n\n", db);
+	 */
 	return (dr>=0&&dl>=0&&dt>=0&&db>=0);
 
 
@@ -91,42 +91,44 @@ void moveSphere(Sphere *sphere){
 
 	vec3 pos = getSpherePosition(sphere);
 	float distance = sqrt(pos.x*pos.x + pos.y*pos.y + pos.z*pos.z);
+	mat4 newPosMat = Mult(Ry(10.0f/distance), sphere->scaleAndPos);
+	vec3 newPos = (vec3){newPosMat.m[3], newPosMat.m[7], newPosMat.m[11]};
 
-	sphere->scaleAndPos = Mult(Ry(10.0f/distance), sphere->scaleAndPos);
+	if(getDistanceToSphere(sphere, getCameraPosVec()) < 1000){
+		translateCamera((vec3){newPos.x-sphere->scaleAndPos.m[3],newPos.y-sphere->scaleAndPos.m[7],newPos.z-sphere->scaleAndPos.m[11]});
+	}
+	
+	sphere->scaleAndPos = newPosMat;
 }
 
-/*
 // Hardcoded nr of planets to 2
-Sphere getNearestSphere(){
-int nr_of_planets = 2;
+double getDistanceToNearestSphere(Sphere *planets, vec3 from){
+	int nr_of_planets = 2;
 
-vec3 planetPos = planets[0].position;
-float dx = getCameraPosVec().x;
-float dy = getCameraPosVec().y;
-float dz = getCameraPosVec().z;
+	double shortestDist = getDistanceToSphere(getLightSourceSphere(), from); 
+	double currentDistance;
+	int indexToNearestSph = 0;
 
-double shortestDist = sqrt(dx*dx+dy*dy+dz*dz);
-double currentDistance;
-int indexToNearestSph = 0;
+	for(int i = 0; i < nr_of_planets; i++){
+		currentDistance = getDistanceToSphere(&planets[i], from);	
+		printf("currentDistance = %lf for sphere %i\n", currentDistance, i);
+		if(currentDistance < shortestDist){
+			indexToNearestSph = i;
+			shortestDist = currentDistance;
+		}
+	}
+	printf("shortest dist = %lf\n\n", shortestDist);
 
-for(int i = 1; i < nr_of_planets; i++){
-planetPos = planets[i].position;
-
-
-dx = getCameraPosVec().x;
-dy = getCameraPosVec().y;
-dz = getCameraPosVec().z;
-
-currentDistance = sqrt(dx*dx+dy*dy+dz*dz);
-
-if(currentDistance < shortestDist){
-indexToNearestSph = i;
-shortestDist = currentDistance;
+	return shortestDist;
 }
 
-}
+double getDistanceToSphere(Sphere *sphere, vec3 from){
+	vec3 planetPos = getSpherePosition(sphere);
 
+	float dx = from.x-planetPos.x;
+	float dy = from.y-planetPos.y;
+	float dz = from.z-planetPos.z;
 
-return planets[indexToNearestSph];
+	return sqrt(dx*dx+dy*dy+dz*dz) - getCameraRadius() - sphere->terrainMaxRadius;
+
 }
- */

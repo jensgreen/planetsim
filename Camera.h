@@ -2,12 +2,14 @@
 #define __CAMERA__
 
 #include "VectorUtils3.h"
+#include "Sphere.h"
 mat4 projectionMatrix;
 
 typedef struct{
-  vec3 position, forward, up;
-  float moveSpeed;
-  float mouseSens;
+	vec3 position, forward, up;
+	float moveSpeed;
+	float mouseSens;
+	float radius;
 } Camera;
 
 void initCamera();
@@ -19,7 +21,9 @@ void moveCameraForward();
 void moveCameraBack();
 void moveCameraRight();
 void moveCameraLeft();
+float getCameraRadius();
 void rotateCamera(int dx, int dy);
+void translateCamera(vec3 velocity);
 
 
 vec3 getCameraForwardVec();

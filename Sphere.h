@@ -11,6 +11,7 @@ typedef  struct{
   float rot;
 	Model *sphereModel;
 } Sphere;
+Sphere planets[2];
 
 vec3 getSpherePosition(Sphere *sph);
 
@@ -22,6 +23,7 @@ void scaleSphere(Sphere *sphere, float s);
 void moveSphere(Sphere *sphere);
 
 bool inFrustum(mat4 spherePos, Sphere *sphere);
-//Sphere getNearestSphere();
 
+double getDistanceToNearestSphere(Sphere *planets, vec3 from);
+double getDistanceToSphere(Sphere *sphere, vec3 from);
 #endif

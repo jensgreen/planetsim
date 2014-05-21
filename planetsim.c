@@ -23,7 +23,6 @@
 
 
 
-Sphere planets[2];
 Halo haloes[1];
 
 
