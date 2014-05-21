@@ -2,6 +2,7 @@
 #define __CAMERA__
 
 #include "VectorUtils3.h"
+mat4 projectionMatrix;
 
 typedef struct{
   vec3 position, forward, up;

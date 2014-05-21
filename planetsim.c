@@ -19,8 +19,8 @@
 #include "LightSource.h"
 #include "Sphere.h"
 #include "Halo.h"
+#include "Camera.h"
 
-mat4 projectionMatrix;
 
 
 Sphere planets[2];

@@ -27,6 +27,8 @@ void drawSphere(Sphere *sphere, mat4 tot,GLuint p){
   DrawModel(sphere->sphereModel, p, "inPosition", "inNormal", NULL);	
 }
 
+
+
 vec3 getSpherePosition(Sphere *sph) {
   return (vec3){sph->scaleAndPos.m[3],sph->scaleAndPos.m[7],sph->scaleAndPos.m[11]};
 }
