@@ -2,6 +2,7 @@
 #define M_SPHERE
 #include "VectorUtils3.h"
 #include "loadobj.h"
+#include <stdbool.h> 
 typedef  struct{
 	float terrainMaxRadius;
 	vec3 velocity;
@@ -20,6 +21,7 @@ void scaleSphere(Sphere *sphere, float s);
 
 void moveSphere(Sphere *sphere);
 
+bool inFrustum(mat4 spherePos, Sphere *sphere);
 //Sphere getNearestSphere();
 
 #endif
