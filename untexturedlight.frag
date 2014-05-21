@@ -25,7 +25,7 @@ void main(void)
       lightDir = -normalize(direction);
       // Diffuse
       diffuse = dot(normalize(exNormal), lightDir);
-      //diffuse = max(0.0, diffuse); // No negative light	
+      diffuse = max(0.0, diffuse); // No negative light	
       color = (ambient+0.5*diffuse)*lightSourcesColor;	
       //outColor = vec4(exPosition, 1.0);
       outColor = vec4(color, 1.0f);

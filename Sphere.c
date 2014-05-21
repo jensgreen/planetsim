@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "Camera.h"
 
+
+
 void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, float terCons, char *s){
 	sphere->scaleAndPos = Mult(T(x,y,z),IdentityMatrix());
 	sphere->rot = 0;
@@ -91,11 +93,11 @@ void moveSphere(Sphere *sphere){
 
 	vec3 pos = getSpherePosition(sphere);
 	float distance = sqrt(pos.x*pos.x + pos.y*pos.y + pos.z*pos.z);
-	mat4 newPosMat = Mult(Ry(10.0f/distance), sphere->scaleAndPos);
-	vec3 newPos = (vec3){newPosMat.m[3], newPosMat.m[7], newPosMat.m[11]};
+	mat4 rotMat = Ry(10.0f/distance);
+	mat4 newPosMat = Mult(rotMat, sphere->scaleAndPos);
 
-	if(getDistanceToSphere(sphere, getCameraPosVec()) < 1000){
-		translateCamera((vec3){newPos.x-sphere->scaleAndPos.m[3],newPos.y-sphere->scaleAndPos.m[7],newPos.z-sphere->scaleAndPos.m[11]});
+	if(getDistanceToSphere(sphere, getCameraPosVec()) < 1000){	
+		rotateCameraWithMat(rotMat);
 	}
 	
 	sphere->scaleAndPos = newPosMat;

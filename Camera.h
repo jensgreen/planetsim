@@ -17,6 +17,9 @@ void initCamera();
 mat4 getCameraMat();
 
 void moveCamera(float x, float y, float z);
+
+void rotateCameraWithMat(mat4 camRot);
+
 void moveCameraForward();
 void moveCameraBack();
 void moveCameraRight();

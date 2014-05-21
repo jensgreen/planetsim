@@ -31,6 +31,12 @@ void moveCamera(float x, float y, float z){
 	}
 }
 
+void rotateCameraWithMat(mat4 camRot) {
+	camera.position = MultVec3(camRot,camera.position);
+	camera.forward = MultVec3(camRot, camera.forward);
+	camera.up = MultVec3(camRot, camera.up);	
+}
+
 // moves the camera to a position in space
 void translateCamera(vec3 velocity){
 	camera.position = VectorAdd(camera.position, velocity);

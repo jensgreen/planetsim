@@ -69,12 +69,12 @@ void init(void)
 
   // init planet 0
   initSphere(&planets[0],0, 0 ,10000,500, 0.7,"models/HD_SPHERE_2015.obj");
-  scaleSphere(&planets[0],500);
+  scaleSphere(&planets[0],2000);
 
 
   //init planet 1
   initSphere(&planets[1],0, 0, -18000,500,0.4,"models/HD_SPHERE_2015.obj");
-  scaleSphere(&planets[1],1500);
+  scaleSphere(&planets[1],3000);
 
   // init the sun and the sphere for the sun
   initLightSource((vec3){0,0,0}, (vec3){1,0.75,0}, 100);
