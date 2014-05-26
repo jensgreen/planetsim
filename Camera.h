@@ -28,6 +28,7 @@ float getCameraRadius();
 void rotateCamera(int dx, int dy);
 void translateCamera(vec3 velocity);
 
+void setMoveSpeed(float speed);
 
 vec3 getCameraForwardVec();
 

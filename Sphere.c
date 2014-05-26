@@ -5,7 +5,7 @@
 
 
 
-void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, float terCons, char *s){
+void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, float terCons, char *s, vec3 color){
 	sphere->scaleAndPos = Mult(T(x,y,z),IdentityMatrix());
 	sphere->rot = 0;
 	sphere->position.x = x;
@@ -14,6 +14,7 @@ void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, floa
 	sphere->terrainMaxRadius = 1.0;
 	sphere->sphereModel=LoadModelPlus(s);
 	sphere->sphereModel = GenerateTerrain(sphere,terIter,terCons);
+  sphere->color = color;
 }
 
 void scaleSphere(Sphere *sphere, float s){
@@ -27,7 +28,8 @@ void drawSphere(Sphere *sphere, mat4 tot,GLuint p){
 	total = Mult(total, sphere->scaleAndPos);
 	if(inFrustum(total, sphere)){
 		glUniformMatrix4fv(glGetUniformLocation(p, "mdlMatrix"), 1, GL_TRUE, total.m);
-		glUniform3fv(glGetUniformLocation(p, "direction"), 1, &sphere->position.x);
+		glUniform3fv(glGetUniformLocation(p, "position"), 1, &sphere->position.x);
+    glUniform3fv(glGetUniformLocation(p, "planetColor"), 1, &sphere->color.x);
 		DrawModel(sphere->sphereModel, p, "inPosition", "inNormal", NULL);	
 	}
 }
@@ -87,50 +89,60 @@ vec3 getSpherePosition(Sphere *sph) {
 	return (vec3){sph->scaleAndPos.m[3],sph->scaleAndPos.m[7],sph->scaleAndPos.m[11]};
 }
 
-
+void setMoveSpeed(float speed){
+  
+}
 
 void moveSphere(Sphere *sphere){
 
 	vec3 pos = getSpherePosition(sphere);
 	float distance = sqrt(pos.x*pos.x + pos.y*pos.y + pos.z*pos.z);
-	mat4 rotMat = Ry(10.0f/distance);
-	mat4 newPosMat = Mult(rotMat, sphere->scaleAndPos);
+	mat4 rotMat = Ry(50.0f/distance);
+  mat4 newPosMat = Mult(rotMat, sphere->scaleAndPos);
 
-	if(getDistanceToSphere(sphere, getCameraPosVec()) < 1000){	
-		rotateCameraWithMat(rotMat);
-	}
-	
-	sphere->scaleAndPos = newPosMat;
+  float distToSphere = getDistanceToSphere(sphere, getCameraPosVec());
+
+  if(distToSphere < 2000){
+    setMoveSpeed((distToSphere/2000)*100);
+  }else{
+    setMoveSpeed(100);
+  }
+
+  if(distToSphere < 500){	
+    rotateCameraWithMat(rotMat);
+  }
+
+  sphere->scaleAndPos = newPosMat;
 }
 
 // Hardcoded nr of planets to 2
 double getDistanceToNearestSphere(Sphere *planets, vec3 from){
-	int nr_of_planets = 2;
+  int nr_of_planets = 2;
 
-	double shortestDist = getDistanceToSphere(getLightSourceSphere(), from); 
-	double currentDistance;
-	int indexToNearestSph = 0;
+  double shortestDist = getDistanceToSphere(getLightSourceSphere(), from); 
+  double currentDistance;
+  int indexToNearestSph = 0;
 
-	for(int i = 0; i < nr_of_planets; i++){
-		currentDistance = getDistanceToSphere(&planets[i], from);	
-		printf("currentDistance = %lf for sphere %i\n", currentDistance, i);
-		if(currentDistance < shortestDist){
-			indexToNearestSph = i;
-			shortestDist = currentDistance;
-		}
-	}
-	printf("shortest dist = %lf\n\n", shortestDist);
+  for(int i = 0; i < nr_of_planets; i++){
+    currentDistance = getDistanceToSphere(&planets[i], from);	
+    printf("currentDistance = %lf for sphere %i\n", currentDistance, i);
+    if(currentDistance < shortestDist){
+      indexToNearestSph = i;
+      shortestDist = currentDistance;
+    }
+  }
+  printf("shortest dist = %lf\n\n", shortestDist);
 
-	return shortestDist;
+  return shortestDist;
 }
 
 double getDistanceToSphere(Sphere *sphere, vec3 from){
-	vec3 planetPos = getSpherePosition(sphere);
+  vec3 planetPos = getSpherePosition(sphere);
 
-	float dx = from.x-planetPos.x;
-	float dy = from.y-planetPos.y;
-	float dz = from.z-planetPos.z;
+  float dx = from.x-planetPos.x;
+  float dy = from.y-planetPos.y;
+  float dz = from.z-planetPos.z;
 
-	return sqrt(dx*dx+dy*dy+dz*dz) - getCameraRadius() - sphere->terrainMaxRadius;
+  return sqrt(dx*dx+dy*dy+dz*dz) - getCameraRadius() - sphere->terrainMaxRadius;
 
 }

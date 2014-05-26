@@ -66,22 +66,29 @@ void init(void)
   // Load models
   printf("Loading models\n");
 
-
+  vec3 color;
+  color = (vec3){0.6,0.2,0.2};
   // init planet 0
-  initSphere(&planets[0],0, 0 ,10000,500, 0.7,"models/HD_SPHERE_2015.obj");
-  scaleSphere(&planets[0],2000);
+  initSphere(&planets[0],0, 0 ,2000,500, 0.7,"models/HD_SPHERE_2015.obj", color);
+  scaleSphere(&planets[0],200);
 
 
+  color = (vec3){0.55,0.8,1.0};
   //init planet 1
-  initSphere(&planets[1],0, 0, -18000,500,0.4,"models/HD_SPHERE_2015.obj");
-  scaleSphere(&planets[1],3000);
+  initSphere(&planets[1],0, 0, -3000,500,0.4,"models/HD_SPHERE_2015.obj", color);
+  scaleSphere(&planets[1],300);
 
+  initSphere(&planets[2],10000, 0, -6000,800,0.2,"models/HD_SPHERE_2015.obj", color);
+  scaleSphere(&planets[2],200);
+
+  initSphere(&planets[3],1000, 0, -6000,1000,0.3,"models/HD_SPHERE_2015.obj", color);
+  scaleSphere(&planets[3],500);
   // init the sun and the sphere for the sun
   initLightSource((vec3){0,0,0}, (vec3){1,0.75,0}, 100);
-  initSphere(&getLightSource()->sphere, 0,0,0,300,0.1,"models/HD_SPHERE_2015.obj");
-  scaleSphere(&getLightSource()->sphere, 3000);
+  initSphere(&getLightSource()->sphere, 0,0,0,300,0.1,"models/HD_SPHERE_2015.obj", color);
+  scaleSphere(&getLightSource()->sphere, 400);
   initHalo(&haloes[0], 0, 0,0, "models/billboard.obj");
-  scaleHalo(&haloes[0],5000);
+  scaleHalo(&haloes[0],700);
   //init light
   printError("init terrain");
 }
@@ -116,11 +123,11 @@ void display(void)
   drawSkybox(projectionMatrix, getCameraMat());
   drawHalo(&haloes[0], total, haloProgram);
 
-  moveSphere(&planets[0]);
-  drawSphere(&planets[0], total, program);
-  
-  moveSphere(&planets[1]);
-  drawSphere(&planets[1], total, program);
+  for(int i = 0; i < 4; i++){
+    moveSphere(&planets[i]);
+    drawSphere(&planets[i], total, program);
+  }
+
   drawSphere(&getLightSource()->sphere, total, program);
   printError("display 2");
 

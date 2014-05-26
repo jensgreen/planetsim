@@ -11,13 +11,14 @@ typedef  struct{
   vec3 position;
 	mat4 scaleAndPos;
   float rot;
+  vec3 color;
 	Model *sphereModel;
 } Sphere;
-Sphere planets[2];
+Sphere planets[4];
 
 vec3 getSpherePosition(Sphere *sph);
 
-void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, float terCons, char *s);
+void initSphere(Sphere *sphere,GLfloat x,GLfloat y, GLfloat z, int terIter, float terCons, char *s, vec3 color);
 void drawSphere(Sphere *sphere, mat4 tot, GLuint p);
 
 void scaleSphere(Sphere *sphere, float s);

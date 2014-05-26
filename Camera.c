@@ -8,7 +8,7 @@ void initCamera(){
 	camera.mouseSens = 0.0005;
 	camera.radius = 50;
 	camera.position.x = 4000;
-	camera.position.y = 0;
+	camera.position.y = 400;
 	camera.position.z = 0;
 	camera.up.x = 0;
 	camera.up.y = 1;
