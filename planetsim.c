@@ -67,20 +67,22 @@ void init(void)
   printf("Loading models\n");
 
   vec3 color;
-  color = (vec3){0.6,0.2,0.2};
+  color = (vec3){0.6, 0.2, 0.2};
   // init planet 0
-  initSphere(&planets[0],0, 0 ,2000,500, 0.7,"models/HD_SPHERE_2015.obj", color);
-  scaleSphere(&planets[0],200);
+  initSphere(&planets[0],0, 0 ,2000,500, 0.3,"models/HD_SPHERE_2015.obj", color);
+  scaleSphere(&planets[0],150);
 
 
-  color = (vec3){0.55,0.8,1.0};
+  color = (vec3){0.55, 0.8, 1.0};
   //init planet 1
   initSphere(&planets[1],0, 0, -3000,500,0.4,"models/HD_SPHERE_2015.obj", color);
   scaleSphere(&planets[1],300);
 
+  color = (vec3){0.56, 0.56, 0.375};
   initSphere(&planets[2],10000, 0, -6000,800,0.2,"models/HD_SPHERE_2015.obj", color);
   scaleSphere(&planets[2],200);
 
+  color = (vec3){0.56, 0.375, 0.18};
   initSphere(&planets[3],1000, 0, -6000,1000,0.3,"models/HD_SPHERE_2015.obj", color);
   scaleSphere(&planets[3],500);
   // init the sun and the sphere for the sun

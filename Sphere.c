@@ -89,9 +89,6 @@ vec3 getSpherePosition(Sphere *sph) {
 	return (vec3){sph->scaleAndPos.m[3],sph->scaleAndPos.m[7],sph->scaleAndPos.m[11]};
 }
 
-void setMoveSpeed(float speed){
-  
-}
 
 void moveSphere(Sphere *sphere){
 
@@ -101,12 +98,6 @@ void moveSphere(Sphere *sphere){
   mat4 newPosMat = Mult(rotMat, sphere->scaleAndPos);
 
   float distToSphere = getDistanceToSphere(sphere, getCameraPosVec());
-
-  if(distToSphere < 2000){
-    setMoveSpeed((distToSphere/2000)*100);
-  }else{
-    setMoveSpeed(100);
-  }
 
   if(distToSphere < 500){	
     rotateCameraWithMat(rotMat);

@@ -68,7 +68,9 @@ void rotateCamera(int dx, int dy){
 	//camera.yRot += dx*camera.mouseSens;
 }
 
-
+void setMoveSpeed(float speed){
+  camera.moveSpeed = speed;
+}
 
 vec3 getCameraForwardVec(){
 	return camera.forward;
