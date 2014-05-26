@@ -108,7 +108,7 @@ void moveSphere(Sphere *sphere){
 
 // Hardcoded nr of planets to 2
 double getDistanceToNearestSphere(Sphere *planets, vec3 from){
-  int nr_of_planets = 2;
+  int nr_of_planets = 4;
 
   double shortestDist = getDistanceToSphere(getLightSourceSphere(), from); 
   double currentDistance;
